@@ -1,0 +1,7 @@
+{
+  "name": "ClimbBudy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
