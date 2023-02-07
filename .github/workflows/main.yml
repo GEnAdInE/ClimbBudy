@@ -32,12 +32,12 @@ jobs:
       env:
         ANDROID_SDK_ROOT: /usr/local/android-sdk
 
-    - name: Commit Android build
-      uses: crazylog/github-action-push-branch@v1
+    - name: Push changes to Android branch
+      uses: actions/create-or-update-branch@v1
       with:
         branch: android
-        message: "Built Android"
-        force: true
+        commit_message: "Built Android"
+        create_pull_request: false
 
   build-ios:
     runs-on: macos-latest
@@ -48,3 +48,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Check commit message
+      if: startsWith(env.COMMIT_MESSAGE, 'BUILD')
+      run: echo "The commit message starts with BUILD"
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build iOS
+      run: ionic build ios
+
+    - name: Push changes to iOS branch
+      uses: actions/create-or-update-branch@v1
+      with:
+        branch: ios
+        commit_message: "Built iOS"
+        create_pull_request: false
