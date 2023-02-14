@@ -1,6 +1,16 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
+body.scanner-active {
+  --background: green;
+  --ion-background-color: green;
+}
+
+.scanner-ui { display: none; }
+.scanner-hide { visibility: visible; }
+
+
+
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
