@@ -30,10 +30,10 @@
 
 <script>
 import {
-    IonCard,
-    IonHeader,
-    IonList,
-    IonPage, IonTitle, IonToolbar
+  IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip,
+  IonHeader,
+  IonList,
+  IonPage, IonTitle, IonToolbar
 } from "@ionic/vue";
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";
@@ -51,6 +51,12 @@ export default {
         IonHeader,
         IonToolbar,
         IonTitle,
+        IonCardTitle,
+        IonCardHeader,
+        IonCardSubtitle,
+        IonCardContent,
+      
+
     },
     methods: {
         goTo(centerId, routeId) {
