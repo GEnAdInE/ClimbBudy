@@ -13,7 +13,7 @@ export default {
   name: "RoutePage",
   components: {RouteDetail,IonPage},
   mounted() {
-    console.log(this.$route.params.uid)
+    console.log(this.$route.params.rid)
   },
 }
 
