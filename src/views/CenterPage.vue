@@ -33,7 +33,13 @@ import {
     IonCard,
     IonHeader,
     IonList,
-    IonPage, IonTitle, IonToolbar
+    IonPage,
+    IonTitle,
+    IonToolbar,
+    IonCardTitle,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardContent,
 } from "@ionic/vue";
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";
