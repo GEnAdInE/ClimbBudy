@@ -48,6 +48,8 @@ export default {
     //BarcodeScanner.hideBackground();
     document.querySelector('body').classList.add('scanner-active');
     document.querySelector('.md body').style.setProperty('--ion-background-color', 'transparent');
+    document.querySelector('.ios body').style.setProperty('--ion-background-color', 'transparent');
+
 
     BarcodeScanner.startScan().then((data) => {
       console.log(data);
@@ -55,6 +57,9 @@ export default {
       this.isScanning = false;
       document.querySelector('body').classList.remove('scanner-active');
       document.querySelector('.md body').style.setProperty('--ion-background-color', 'black');
+      document.querySelector('.ios body').style.setProperty('--ion-background-color', 'black');
+
+
       BarcodeScanner.stopScan();
       router.push("/routes/"+data.content);
 
