@@ -9,34 +9,27 @@
     </ion-item>
 </template>
 
-<script lang="ts">
-import { chevronForward } from 'ionicons/icons';
+<script setup lang="ts">
+import {chevronForward} from 'ionicons/icons';
 import {Center} from "@/data/center";
 import {IonIcon, IonItem, IonLabel} from "@ionic/vue";
 
 
+defineProps({
+    center: Object as () => Center
+})
 
-export default {
-    name: "CenterCard",
-    props: {
-        center : Center
-    },
-    components: {IonLabel, IonItem, IonIcon},
-    methods: {
-        test(center : Center) {
-            // make an ionic toast
-            console.log(center)
-            //navigate to the route page
-        },
-        isIos() {
-            const win = window as any;
-            return win && win.Ionic && win.Ionic.mode === 'ios';
-        }
-    },
-    setup() {
-        return { chevronForward };
-    }
+function test(center: Center) {
+    // make an ionic toast
+    console.log(center)
+    //navigate to the route page
 }
+
+function isIos() {
+    const win = window as any;
+    return win && win.Ionic && win.Ionic.mode === 'ios';
+}
+
 </script>
 
 <style scoped>

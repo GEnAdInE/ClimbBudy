@@ -20,10 +20,15 @@ export class RouteServices {
      * Method to get all routes from database asynchronously.
      */
     public static async getRoutesAsync(routeList: Route[] = []): Promise<Route[]> {
+
+        const newRouteList: Route[] = [];
+
         //const routeList: Route[] = [];
         const centers = await CenterServices.getCentersAsync();
 
         for (const center of centers) {
+
+            const centerRoutes : Route[] = [];
 
             // Get routes collection
             const routesCollection = collection(db, sprintf(collectionPath, center.id));
@@ -39,12 +44,16 @@ export class RouteServices {
                 const route: Route = doc.data() satisfies Route;
                 route.id = doc.id;
 
-                routeList.push(route);
+                newRouteList.push(route);
+                centerRoutes.push(route);
             }
+
+            center.routes = centerRoutes;
         }
 
         // Log the reference to the array, not the array itself
-
+        routeList.splice(0, routeList.length);
+        routeList.push(...newRouteList);
 
         return routeList;
     }

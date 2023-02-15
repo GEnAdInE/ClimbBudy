@@ -15,26 +15,25 @@ export class CenterServices {
     /**
      * Method to get all centers from database asynchronously.
      */
-    public static async getCentersAsync(): Promise<Center[]> {
-        const centerList: Center[] = [];
+    public static async getCentersAsync(centerList : Center[] = []): Promise<Center[]> {
+        const newCenterList: Center[] = [];
 
         // Get users
-        const centers = getDocs(centersCollection);
+        const centers = await getDocs(centersCollection);
 
-        return await centers.then((querySnapshot) => {
+        for (const doc of centers.docs) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const center: Center = doc.data() satisfies Center;
+            center.id = doc.id;
 
-                for (const doc of querySnapshot.docs) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    const center: Center = doc.data() satisfies Center;
-                    center.id = doc.id;
+            newCenterList.push(center);
+        }
 
-                    centerList.push(center);
-                }
+        centerList.splice(0, centerList.length);
+        centerList.push(...newCenterList);
 
-                return centerList;
-            }
-        );
+        return centerList;
     }
 
 

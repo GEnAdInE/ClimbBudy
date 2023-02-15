@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
         component: CameraPage,
     },
     {
-        path: '/centers/:id',
+        path: '/centers/:centerId',
         component: CenterPage,
         props: true,
     },
@@ -31,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/centers/:centerId/routes/:routeId',
         component: RoutePage,
+        props: true,
     },
 
     {

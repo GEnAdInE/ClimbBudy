@@ -58,6 +58,10 @@ function doSomehting(detail: any): void {
     console.log(detail);
 }
 
+function castToCenter(center: any): Center {
+    return center as Center;
+}
+
 function campage() {
 
     router.push('/camera');
