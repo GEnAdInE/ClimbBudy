@@ -13,6 +13,18 @@ body.scanner-active {
 
 /** Ionic CSS Variables **/
 :root {
+
+
+
+  /** pink **/
+  --ion-color-pink: #f00098;
+  --ion-color-pink-rgb: 240, 0, 152;
+  --ion-color-pink-contrast: #ffffff;
+  --ion-color-pink-contrast-rgb: 255, 255, 255;
+  --ion-color-pink-shade: #d30086;
+  --ion-color-pink-tint: #f21aa2;
+
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;

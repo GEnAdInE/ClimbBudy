@@ -5,6 +5,7 @@
                 <ion-title>Climb buddy</ion-title>
             </ion-toolbar>
         </ion-header>
+      <ion-content>
         <ion-card color="tertiary">
             <ion-card-header v-if="centerRef" @click="log(centerRef.routes)">
                 <ion-card-title v-if="centerRef.name">{{ centerRef.name ?? "" }}</ion-card-title>
@@ -15,8 +16,10 @@
             </ion-card-header>
         </ion-card>
 
-        <ion-list>
-
+        <ion-list mode="ios">
+          <ion-list-header mode="ios">
+            <ion-label mode="ios">List of routes</ion-label>
+          </ion-list-header>
             <RouteCard @click="goTo(centerRef.id, route.id)" v-for="route in routesRef" :key="route.id"
                        :color="route.color" :name="route.name"
                        :icon="route.icon" :difficulty="route.difficulty" :author="route.author"
@@ -24,6 +27,12 @@
                        :location="route.location"/>
 
         </ion-list>
+      </ion-content>
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button @click="goBack()">
+          <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </ion-page>
 
 </template>
@@ -40,6 +49,13 @@ import {
     IonCardHeader,
     IonCardSubtitle,
     IonCardContent,
+    IonListHeader,
+    IonLabel,
+    IonContent,
+    IonIcon,
+    IonFab,
+    IonFabButton
+
 } from "@ionic/vue";
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";
@@ -47,6 +63,9 @@ import {onMounted, ref} from "vue";
 import {Center} from "@/data/center";
 import RouteCard from "@/components/RouteCard.vue";
 import {Route} from "@/data/route";
+import component from "*.vue";
+import {arrowBackCircleOutline} from "ionicons/icons";
+
 
 function goTo(centerId : string, routeId : string) {
     router.push('/centers/' + centerId + '/routes/' + routeId);
@@ -60,6 +79,9 @@ const props = defineProps({
     centerId: String,
 });
 
+const goBack = () => {
+    router.push('/home');
+}
 const centerRef = ref<Center>();
 const routesRef = ref<Route[]>();
 

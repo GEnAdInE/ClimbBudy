@@ -5,23 +5,37 @@
       <ion-title>Climb buddy</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-label>{{qr}}</ion-label>
-  <ion-button @click="goBack()" style="z-index: 9; float: bottom">GoBack</ion-button>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button @click="goBack()">
+      <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   <div v-if="isScanning" class="scan-box"></div>
 </ion-page>
 
 </template>
 
 <script>
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
-import {IonButton, IonHeader, IonLabel, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {BarcodeScanner, SupportedFormat} from '@capacitor-community/barcode-scanner';
+import {arrowBackCircleOutline} from "ionicons/icons";
+import {
+  IonFab, IonFabButton,
+  IonHeader, IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  isPlatform,
+  toastController
+} from "@ionic/vue";
 import router from "@/router";
 
 export default {
   name: "CameraPage",
   components: {
     IonPage,
-    IonButton,
+    IonFab,
+    IonFabButton,
+    IonIcon,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -35,37 +49,92 @@ export default {
   },
   methods:{
     goBack(){
+      if(!isPlatform('desktop') && !isPlatform('mobileweb')){
+        BarcodeScanner.stopScan();
+        this.realShow();
+      }
+
       router.push("/home")
-      BarcodeScanner.stopScan();
+
 
     },
+    realShow(){
+      BarcodeScanner.showBackground();
+      document.querySelector('body').classList.remove('scanner-active');
+      if(isPlatform('ios')){
+        document.querySelector('.ios body').style.setProperty('--ion-background-color', 'black');
+
+      }
+      if(isPlatform('android')){
+        document.querySelector('.md body').style.setProperty('--ion-background-color', 'black');
+      }
+    },
+    realHide(){
+
+      BarcodeScanner.showBackground();
+      document.querySelector('body').classList.add('scanner-active');
+      if(isPlatform('ios')) {
+        document.querySelector('.ios body').style.setProperty('--ion-background-color', 'transparent');
+
+      }
+      if(isPlatform('android')) {
+        document.querySelector('.md body').style.setProperty('--ion-background-color', 'transparent');
+      }
+    }
 
   },
-  mounted() {
+  setup(){
+    return{
+      arrowBackCircleOutline
+    }
+  },
+  ionViewDidEnter() {
+    if(isPlatform('desktop') || isPlatform('mobileweb')) {
+      toastController.create({
+        message: "Don't work on web !!",
+        duration: 1500,
+        position: 'middle',
+        color: 'warning',
+      }).then((toast) => {
+        toast.present();
+      });
+    }else{
+      BarcodeScanner.prepare();
+      this.isScanning = true;
+      this.realHide();
 
-     BarcodeScanner.prepare();
-    this.isScanning = true;
-    //BarcodeScanner.hideBackground();
-    document.querySelector('body').classList.add('scanner-active');
-    document.querySelector('.md body').style.setProperty('--ion-background-color', 'transparent');
-    document.querySelector('.ios body').style.setProperty('--ion-background-color', 'transparent');
+      BarcodeScanner.startScan({ targetedFormats: [SupportedFormat.QR_CODE] }).then((data) => {
+        console.log(data);
+        this.qr = data.content;
 
 
-    BarcodeScanner.startScan().then((data) => {
-      console.log(data);
-      this.qr = data.content;
-      this.isScanning = false;
-      document.querySelector('body').classList.remove('scanner-active');
-      document.querySelector('.md body').style.setProperty('--ion-background-color', 'black');
-      document.querySelector('.ios body').style.setProperty('--ion-background-color', 'black');
+        if(data.hasContent){
+          if(data.content.startsWith("https://climbbudy.web.app/")){
+            router.push(data.content.split("https://climbbudy.web.app")[1]);
+            BarcodeScanner.stopScan();
+            this.isScanning = false;
+            this.realShow();
+          }
+          else {
+            toastController.create({
+              message: "Not a valid QR Code",
+              duration: 1500,
+              position: 'middle',
+              color: 'pink',
+
+            }).then((toast) => {
+              toast.present();
+            });
+          }
+        }
+
+      });
+    }
 
 
-      BarcodeScanner.stopScan();
-      router.push("/routes/"+data.content);
 
+  },
 
-    });
-  }
 }
 </script>
 
