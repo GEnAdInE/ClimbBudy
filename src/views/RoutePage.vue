@@ -15,28 +15,72 @@
         <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
+
+
+
+    <ion-fab slot="fixed" vertical="top" horizontal="end">
+      <ion-fab-button @click="showModal()">
+        <ion-icon :icon="arrowBackCircleOutline"></ion-icon> <!-- TODO : edit icon -->
+      </ion-fab-button>
+    </ion-fab>
+
+    <ion-modal :is-open="isModalOpen" >
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Edit Route</ion-title>
+            <ion-button color="danger" shape="round" @click="showModal()" slot="end">CLOSE</ion-button>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <EditRouteDetails :details="details"></EditRouteDetails>
+          <ion-button color="danger"> REMOVE ROUTE</ion-button>
+          <ion-button color="success"> SAVE CHANGE</ion-button>
+        </ion-content>
+
+
+
+
+        <!-- TODO selector for diff -->
+      <ion-content>
+
+
+      </ion-content>
+
+
+    </ion-modal>
+
   </ion-page>
 </template>
 
 <script>
+
+// TODO: ADD EVENTS ETC
+// TODO: ADD STYLE
+
 import RouteDetail from "../components/RouteDetail";
-import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonPage,IonButton, IonTitle, IonToolbar,IonModal , IonInput} from "@ionic/vue";
 import router from "@/router";
 import {onMounted, ref, toRefs} from "vue";
 import {CenterServices} from "@/services/center-services";
 import {Route} from "@/data/route";
 import {arrowBackCircleOutline} from "ionicons/icons";
+import EditRouteDetails from "@/components/EditRouteDetails";
 export default {
   name: "RoutePage",
-  components: {RouteDetail, IonPage, IonHeader, IonToolbar, IonTitle,IonIcon,IonFab,IonFabButton,IonContent},
+  components: {RouteDetail, IonPage, IonHeader, IonToolbar, IonTitle,IonIcon,IonFab,IonFabButton,IonContent,IonModal,IonButton,EditRouteDetails},
   data() {
     return {
       details: Route,
+      isModalOpen : false,
     }
   },
   methods:{
     goBack(){
       router.push('/centers/' + this.$route.params.centerId);
+    },
+    showModal(){
+      this.isModalOpen = !this.isModalOpen
     }
   },
 
