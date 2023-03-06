@@ -14,8 +14,6 @@ body.scanner-active {
 /** Ionic CSS Variables **/
 :root {
 
-
-
   /** pink **/
   --ion-color-pink: #f00098;
   --ion-color-pink-rgb: 240, 0, 152;
@@ -96,6 +94,33 @@ body.scanner-active {
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** super dark **/
+  --ion-color-superdark: #000000;
+  --ion-color-superdark-rgb: 0,0,0;
+  --ion-color-superdark-contrast: #ffffff;
+  --ion-color-superdark-contrast-rgb: 255,255,255;
+  --ion-color-superdark-shade: #000000;
+  --ion-color-superdark-tint: #1a1a1a;
+}
+
+
+.ion-color-pink {
+  --ion-color-base: var(--ion-color-pink);
+  --ion-color-base-rgb: var(--ion-color-pink-rgb);
+  --ion-color-contrast: var(--ion-color-pink-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-pink-contrast-rgb);
+  --ion-color-shade: var(--ion-color-pink-shade);
+  --ion-color-tint: var(--ion-color-pink-tint);
+}
+
+.ion-color-superdark {
+  --ion-color-base: var(--ion-color-superdark);
+  --ion-color-base-rgb: var(--ion-color-superdark-rgb);
+  --ion-color-contrast: var(--ion-color-superdark-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-superdark-contrast-rgb);
+  --ion-color-shade: var(--ion-color-superdark-shade);
+  --ion-color-tint: var(--ion-color-superdark-tint);
 }
 
 @media (prefers-color-scheme: dark) {
