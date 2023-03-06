@@ -26,7 +26,32 @@
 
      <!-- ici remplacer tout les props pas juste un seul props detail -->
 
-      <RouteDetail slot="fixed" :color="details.color" :icon="details.icon" :author="details.author" :description="details.description" :difficulty="details.difficulty" :location="details.location" :name="details.name"></RouteDetail>
+      <RouteDetail :color="details.color" :icon="details.icon" :author="details.author" :description="details.description" :difficulty="details.difficulty" :location="details.location" :name="details.name"></RouteDetail>
+      <div class="comment-title">
+        <ion-label >Comments : </ion-label>
+      </div>
+
+      <CommentComp style="height: 50vh" ></CommentComp>
+      <ion-button id="click-trigger" style="margin-top: 2vh" color="secondary" shape="round" strong="true" expand="block">Add a comment</ion-button>
+      <ion-popover trigger="click-trigger" trigger-action="click" side="top" alignment="center">
+        <ion-content>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Adding a comment</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label position="floating">Your text</ion-label>
+                <ion-input></ion-input>
+
+              </ion-item>
+              <ion-button style="margin-top: 2vh" color="success" expand="block">Send</ion-button>
+            </ion-card-content>
+          </ion-card>
+
+        </ion-content>
+      </ion-popover>
+
       <ion-modal :is-open="isModalOpen" >
         <ion-header>
           <ion-toolbar>
@@ -44,7 +69,17 @@
 
 
     </ion-content>
-    <ion-content>
+
+
+
+  <!-- ici component commentaires -->
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button @click="goBack()">
+        <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
     <div :id="'square'+details.id" class="square">
       <div class="top-left">{{ details.difficulty }}</div>
       <div class="top-right">{{ details.difficulty }}</div>
@@ -99,16 +134,8 @@
         </ion-grid>
       </div>
     </div>
-
-    </ion-content>
-  <!-- ici component commentaires -->
-
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button @click="goBack()">
-        <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
   </ion-page>
+
 </template>
 
 <script>
@@ -138,9 +165,12 @@ import EditRouteDetails from "@/components/EditRouteDetails";
 import QRCodeStyling from "qr-code-styling";
 import * as htmlToImage from "html-to-image";
 import * as download from "downloadjs";
+import CommentComp from "@/components/CommentComp";
 export default {
   name: "RoutePage",
-  components: {RouteDetail, IonPage, IonHeader, IonToolbar, IonTitle,IonIcon,IonFab,IonFabButton,IonContent,IonModal,IonButton,EditRouteDetails,IonLabel,IonCol,IonGrid,IonRow,IonFabList},
+  components: {
+    CommentComp,
+    RouteDetail, IonPage, IonHeader, IonToolbar, IonTitle,IonIcon,IonFab,IonFabButton,IonContent,IonModal,IonButton,EditRouteDetails,IonLabel,IonCol,IonGrid,IonRow,IonFabList},
   data() {
     return {
       details: Route,
@@ -309,11 +339,12 @@ export default {
 <style scoped>
 
 .square {
+
   visibility: hidden;
   background-color: #f1c40f;
   height: 500px;
   width: 650px;
-  position: relative;
+  position: fixed;
 }
 .top-left,
 .top-right,
@@ -363,6 +394,16 @@ ion-col{
 }
 .qr{
   margin-right: 2vw;
+}
+
+.comment-title{
+  display: flex;
+  justify-items: center;
+
+  margin-bottom: 0vh;
+  margin-left: 2vw;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 
