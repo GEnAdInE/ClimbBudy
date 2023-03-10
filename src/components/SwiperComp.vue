@@ -4,7 +4,7 @@
 
 <script>
 export default {
-name: "SwiperComp"
+    name: "SwiperComp"
 }
 </script>
 

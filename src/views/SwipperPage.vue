@@ -1,10 +1,10 @@
 <template>
-$END$
+    $END$
 </template>
 
 <script>
 export default {
-name: "SwipperPage"
+    name: "SwipperPage"
 }
 </script>
 

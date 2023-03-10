@@ -1,23 +1,26 @@
 <template>
-    <ion-item @click="test(center)" routerDirection="forward">
+    <ion-item routerDirection="forward" @click="test(props.center)">
         <ion-label>
-            <h2>{{ center.name }}</h2>
-            <p>{{ center.address }}<!--, {{ center.address.longitude }}--></p>
-            <p>{{ center.website }}</p>
+            <h2>{{ props.center.name }}</h2>
+            <p>{{ props.center.address }}<!--, {{ center.address.longitude }}--></p>
+            <p>{{ props.center.website }}</p>
         </ion-label>
-        <ion-icon :icon="chevronForward" size="small" v-if="isIos()"></ion-icon>
+        <ion-icon v-if="isIos()" :icon="chevronForward" size="small"></ion-icon>
     </ion-item>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {chevronForward} from 'ionicons/icons';
 import {Center} from "@/data/center";
 import {IonIcon, IonItem, IonLabel} from "@ionic/vue";
 
 
-defineProps({
-    center: Object as () => Center
-})
+const props = defineProps({
+    center: {
+        type: Object as () => Center,
+        required: true
+    }
+});
 
 function test(center: Center) {
     // make an ionic toast

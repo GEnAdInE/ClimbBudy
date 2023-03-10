@@ -4,8 +4,6 @@ import HomePage from '../views/HomePage.vue'
 import CameraPage from '../views/CameraPage.vue'
 import CenterPage from '../views/CenterPage.vue'
 import RoutePage from '../views/RoutePage.vue'
-import {CenterServices} from "@/services/center-services";
-import {Center} from "@/data/center";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -35,8 +33,9 @@ const routes: Array<RouteRecordRaw> = [
     },
 
     {
-        path: '/message/:id',
-        component: () => import('../views/ViewMessagePage.vue')
+        path: '/centers/:centerId/routes/:routeId/comments/:id',
+        component: () => import('../views/ViewMessagePage.vue'),
+        props: true,
     }
 ]
 

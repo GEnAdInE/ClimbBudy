@@ -1,10 +1,10 @@
 <template>
-$END$
+    $END$
 </template>
 
 <script>
 export default {
-name: "ScannQr"
+    name: "ScannQr"
 }
 </script>
 

@@ -1,14 +1,24 @@
-export class Route{
+import {Comment} from "@/data/comment";
+import {Center} from "@/data/center";
+import {AbstractData} from "@/data/abstract-data";
+
+export class Route extends AbstractData {
+
+    keysToIgnore: string[] = ['id', 'center', 'comments'];
+
     constructor(
-        public id : string,
+        public id: string,
         public name: string,
-        public description: string = "Descriptiion will be here",
-        public difficulty: string = "7A",
-        public center_id: string,
-        public tips: string = "Tip will be here",
-        public icon: string = "🔥",
-        public author: string = "Ouvreur 1",
-        public location: string = "7",
-        public color: string = "warning",
-    ) {}
+        public description: string,
+        public difficulty: string,
+        public center: Center | undefined,
+        public tips: string,
+        public icon: string,
+        public author: string,
+        public location: string,
+        public color: string,
+        public comments: Comment[] = [],
+    ) {
+        super();
+    }
 }
