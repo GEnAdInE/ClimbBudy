@@ -50,7 +50,7 @@
                     </ion-toolbar>
                 </ion-header>
 
-                <ion-content>
+                <ion-content >
                     <EditRouteDetails @saved="handleAdd"></EditRouteDetails>
                 </ion-content>
             </ion-modal>
@@ -90,7 +90,8 @@ import {
     IonModal,
     IonPage,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+
 } from "@ionic/vue";
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";
@@ -101,6 +102,7 @@ import {Route} from "@/data/route";
 import {addCircleOutline, arrowBackCircleOutline, chevronDownCircle, createOutline} from "ionicons/icons";
 import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import {RouteServices} from "@/services/route-services";
+
 
 const props = defineProps({
     centerId: {

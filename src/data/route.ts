@@ -18,6 +18,14 @@ export class Route extends AbstractData {
         public location: string,
         public color: string,
         public comments: Comment[] = [],
+        /*public card: {
+            arete: boolean,
+            diedre: boolean,
+            main: boolean,
+            pied: boolean,
+            scotch: boolean,
+        }*/
+        public card: object,
     ) {
         super();
     }

@@ -5,11 +5,18 @@
                 <ion-chip color="light" style="float: right;bottom: 1vh">{{ difficulty }}</ion-chip>
             </ion-card-title>
             <ion-card-subtitle>{{ author }}</ion-card-subtitle>
-            <ion-card-content>
+            <ion-card-content class="infobulle">
                 <ion-chip color="light">
                     <ion-icon :icon="locationOutline"></ion-icon>
                     <ion-label>{{ location }}</ion-label>
                 </ion-chip>
+                <div v-bind:key="key" v-for="(key,value) in card">
+                  <ion-chip v-if="key" color="light" >
+                    <ion-icon :icon="checkmark"></ion-icon>
+                    <ion-label >{{value}}</ion-label>
+                  </ion-chip>
+                </div>
+
             </ion-card-content>
             <ion-card-content>
 
@@ -20,7 +27,7 @@
     </ion-card>
 </template>
 
-<script>
+<script lang="ts">
 import {
     IonCard,
     IonCardContent,
@@ -31,13 +38,13 @@ import {
     IonIcon,
     IonLabel
 } from "@ionic/vue";
-import {locationOutline} from "ionicons/icons";
+import {card, checkmark, locationOutline} from "ionicons/icons";
 
 export default {
     name: "RouteDetail",
     components: {IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonChip, IonIcon, IonLabel, IonCardContent},
     setup() {
-        return {locationOutline};
+        return {locationOutline,checkmark};
     },
     props: {
         color: {
@@ -68,11 +75,23 @@ export default {
             type: String,
             required: true,
         },
+        card:{
+          type: Object,
+          required: false,
+        }
 
+    },
+    methods: {
+      checkBool(val :string): boolean {
+        return val == "true";
+      },
     }
 }
 </script>
 
 <style scoped>
-
+.infobulle{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;}
 </style>

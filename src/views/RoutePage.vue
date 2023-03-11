@@ -28,15 +28,15 @@
 
             <RouteDetail :author="routeRef.author" :color="routeRef.color" :description="routeRef.description"
                          :difficulty="routeRef.difficulty" :icon="routeRef.icon"
-                         :location="routeRef.location" :name="routeRef.name"></RouteDetail>
+                         :location="routeRef.location" :name="routeRef.name" :card="routeRef.card"></RouteDetail>
             <div class="comment-title">
                 <ion-label>Comments :</ion-label>
             </div>
 
-            <ion-content style="height: 50vh" scroll-y="scroll-y">
+
                 <!-- For each messages in "messages" -->
-                <CommentListItem v-for="comment in routeRef.comments" :key="comment.id" :comment="comment"/>
-            </ion-content>
+            <CommentListItem v-for="comment in routeRef.comments" :key="comment.id" :comment="comment"/>
+
             <ion-button id="click-trigger" color="secondary" expand="block" shape="round" strong="strong"
                         style="margin-top: 2vh">Add a comment
             </ion-button>
@@ -61,7 +61,7 @@
                 </ion-content>
             </ion-popover>
 
-            <ion-modal :is-open="isModalOpen">
+            <ion-modal :is-open="state.isModalOpen">
                 <ion-header>
                     <ion-toolbar>
                         <ion-title>Edit Route</ion-title>
@@ -79,15 +79,13 @@
 
         </ion-content>
 
-
-        <!-- ici component commentaires -->
-
         <ion-fab slot="fixed" horizontal="end" vertical="bottom">
             <ion-fab-button @click="goBack()">
                 <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
             </ion-fab-button>
         </ion-fab>
 
+        <!-- Image maker -->
         <div :id="'square'+routeRef.id" class="square">
             <div class="top-left">{{ routeRef.difficulty }}</div>
             <div class="top-right">{{ routeRef.difficulty }}</div>
@@ -99,44 +97,12 @@
             <div class="center">
                 <div :id="'qr'+routeRef.id" class="qr"></div>
                 <ion-grid>
-                    <ion-row>
+                    <ion-row :key="item" v-for="(val,item) in routeRef.card" >
                         <ion-col size="8">
-                            <ion-label color="superdark">Pied relief</ion-label>
+                            <ion-label color="superdark">{{item}}</ion-label>
                         </ion-col>
                         <ion-col size="3">
-                            <ion-label color="superdark">Oui</ion-label>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="8">
-                            <ion-label color="superdark">Main relief</ion-label>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-label color="superdark">Oui</ion-label>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="8">
-                            <ion-label color="superdark">Diedre</ion-label>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-label color="superdark">Oui</ion-label>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="8">
-                            <ion-label color="superdark">Diedre</ion-label>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-label color="superdark">Oui</ion-label>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="8">
-                            <ion-label color="superdark">Diedre</ion-label>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-label color="superdark">Oui</ion-label>
+                            <ion-label color="superdark">{{convertTrueFalse(val)}}</ion-label>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -165,17 +131,22 @@ import {
     IonPage, IonPopover,
     IonRow,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonItem
 } from "@ionic/vue";
 import router from "@/router";
 import {Route} from "@/data/route";
 import {arrowBackCircleOutline, chevronDownCircle, createOutline, shareOutline} from "ionicons/icons";
-import RouteDetail from "@/components/RouteDetail";
-import EditRouteDetails from "@/components/EditRouteDetails";
+import RouteDetail from "@/components/RouteDetail.vue";
+import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import QRCodeStyling from "qr-code-styling";
 import * as htmlToImage from "html-to-image";
 import CommentListItem from "@/components/CommentListItem.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {RouteServices} from "@/services/route-services";
 import {Comment} from "@/data/comment";
 import {CommentServices} from "@/services/comment-services";
@@ -183,8 +154,7 @@ import {CommentServices} from "@/services/comment-services";
 const sendCommentPopover = ref();
 
 const routeRef = ref<Route>();
-let isModalOpen = false;
-
+const state = reactive({isModalOpen : false});
 const props = defineProps({
     centerId: {
         type: String,
@@ -196,12 +166,19 @@ const props = defineProps({
     }
 })
 
+function convertTrueFalse(value: boolean){
+    if(value){
+        return "Yes";
+    } else {
+        return "No";
+    }
+}
 function goBack() {
     router.push('/centers/' + props.centerId);
 }
 
 function showModal() {
-    isModalOpen = !isModalOpen
+    state.isModalOpen = !state.isModalOpen
 }
 
 async function sendComment() {
@@ -235,9 +212,9 @@ async function sendComment() {
     sendCommentPopover.value.$el.dismiss();
 }
 
-function handleSave(route: Route) {
+function handleSave(route: any) {
     showModal();
-    console.log(route);
+    console.log(route satisfies Route);
     // update route where params of route not equals to ''
 
 }
@@ -451,7 +428,7 @@ ion-col {
     margin-left: 2vw;
     font-size: 30px;
     font-weight: bold;
-}
 
+}
 
 </style>
