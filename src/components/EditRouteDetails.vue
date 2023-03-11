@@ -96,7 +96,7 @@ import {
   IonSelectOption
 } from "@ionic/vue";
 import {Route} from "@/data/route";
-import colorlist from "@/theme/colorlist";
+import colorlist from "@//theme/colorlist";
 import CardOptionPicker from "@/components/CardOptionPicker.vue";
 import {ref, reactive, onMounted} from "vue";
 
@@ -136,10 +136,13 @@ function save() {
     const itemList = localComp.value.state.itemList;
     const convertedItemList = {};
     for (const { name, value } of itemList) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       convertedItemList[name] = value; //tranquille ca marche quand meme
     }
     state.localDetails.card = convertedItemList;
-    emit("saved", state.localDetails);
+    const convertedroute = new Route('', state.localDetails.name,state.localDetails.description,state.localDetails.difficulty,undefined,state.localDetails.tips,state.localDetails.icon,state.localDetails.author,state.localDetails.location,state.localDetails.color,null,state.localDetails.card);
+    emit("saved", convertedroute);
   }
 }
 
