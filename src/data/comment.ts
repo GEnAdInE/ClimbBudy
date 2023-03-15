@@ -4,7 +4,7 @@ import {AbstractData} from "@/data/abstract-data";
 
 export class Comment extends AbstractData {
 
-    keysToIgnore: string[] = ['id', 'route', 'user'];
+    keysToIgnore: string[] = ['id', 'route', 'user','blobimages'];
 
     constructor(
         public id: string,
@@ -12,6 +12,10 @@ export class Comment extends AbstractData {
         public user: User | undefined,
         public subject: string,
         public date: string,
+
+        public images: string[] = [],
+        public blobimages: Blob[] = [],
+
     ) {
         super();
     }
