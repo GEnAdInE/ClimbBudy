@@ -28,7 +28,7 @@
 
             <RouteDetail :author="routeRef.author" :color="routeRef.color" :description="routeRef.description"
                          :difficulty="routeRef.difficulty" :icon="routeRef.icon"
-                         :location="routeRef.location" :name="routeRef.name" :card="routeRef.card"></RouteDetail>
+                         :location="routeRef.location" :name="routeRef.name" :card="routeRef.card" :tips="routeRef.tips"></RouteDetail>
             <div class="comment-title">
                 <ion-label>Comments :</ion-label>
             </div>
@@ -95,9 +95,9 @@
                 <ion-label>{{ routeRef.name }}</ion-label>
             </div>
             <div class="center">
-                <div :id="'qr'+routeRef.id" class="qr"></div>
+                <div ref="qr" id="qr" class="qr"></div>
                 <ion-grid>
-                    <ion-row :key="item" v-for="(val,item) in routeRef.card" >
+                    <ion-row :key="item" v-for="[val,item] in cardConverted()" >
                         <ion-col size="8">
                             <ion-label color="superdark">{{item}}</ion-label>
                         </ion-col>
@@ -146,13 +146,14 @@ import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import QRCodeStyling from "qr-code-styling";
 import * as htmlToImage from "html-to-image";
 import CommentListItem from "@/components/CommentListItem.vue";
-import {onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref} from "vue";
 import {RouteServices} from "@/services/route-services";
 import {Comment} from "@/data/comment";
 import {CommentServices} from "@/services/comment-services";
 
 const sendCommentPopover = ref();
 
+const qr =  ref<HTMLElement>();
 const routeRef = ref<Route>();
 const state = reactive({isModalOpen : false});
 const props = defineProps({
@@ -165,6 +166,20 @@ const props = defineProps({
         required: true
     }
 })
+
+function cardConverted(){
+  const mapp = new Map<string,boolean>();
+
+  routeRef.value?.card.forEach((item: any) => {
+    const spliter = item.split(':');
+    if(spliter[1] == "true"){
+      mapp.set(spliter[0],true);
+    }else{
+      mapp.set(spliter[0],false);
+    }
+  });
+  return mapp;
+}
 
 function convertTrueFalse(value: boolean){
     if(value){
@@ -313,17 +328,17 @@ function createQrCode() {
 
     })
 
-    const el = document.getElementById('qr' + routeRef.value?.id)
-    if (!el) return;
-    qrCode.append();
-
+    qrCode.append(qr.value);
+    console.log(qr.value)
 
     //qrCode.download({ name: "qr", extension: "png" });
 }
 
 
 function createImage() {
-    const node = document.getElementById('square' + routeRef.value?.id);
+  console.log(qr.value)
+
+  const node = document.getElementById('square' + routeRef.value?.id);
 
     // Ensure the node exists
     if (!node) return;
@@ -335,8 +350,13 @@ function createImage() {
 
     htmlToImage.toPng(node)
         .then(function (dataUrl) {
+          console.log(dataUrl)
             node.style.visibility = "hidden";
-            //download(dataUrl, 'my-node.png');
+          // assume that the image data is stored in a Blob object called "imageBlob"
+          const downloadLink = document.createElement("a");
+          downloadLink.href = dataUrl;
+          downloadLink.download = "card.png"
+          downloadLink.click();
 
         });
 }
@@ -345,8 +365,8 @@ function createImage() {
 onMounted(async () => {
     //get route details
     routeRef.value = await RouteServices.getRouteAsync(props.centerId, props.routeId, true);
+    await  nextTick()
     createQrCode();
-
 });
 
 

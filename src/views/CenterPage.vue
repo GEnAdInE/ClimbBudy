@@ -124,11 +124,11 @@ function showAddModal() {
 
 async function handleAdd(e: any) {
     console.log(e);
-    if (!props.centerId) return;
-    e.center_id = props.centerId;
+    if (centerRef.value) return;
+    e.center = centerRef.value;
     e.id = null;
     const res = await RouteServices.addRoute(e);
-    console.log(res);
+
     if (res && routesRef.value) {
         routesRef.value.push(e);
     }

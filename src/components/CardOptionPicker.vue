@@ -23,7 +23,7 @@ import {onMounted, reactive} from "vue";
 
 const props = defineProps({
   card: {
-    type: Object,
+    type: Array,
     required: false
   }
 })
@@ -45,10 +45,15 @@ function removeItem(item: any) {
 onMounted(() => {
   state.itemList.pop();
   if (props.card) {
-    const tmpMap = new Map(Object.entries(props.card));
-    for(const [key, value] of tmpMap){
-      state.itemList.push({name: key, value: value})
-    }
+    props.card?.forEach((item: any) => {
+      const spliter = item.split(':');
+      if(spliter[1] == "true"){
+        state.itemList.push({name: spliter[0], value: true})
+      }else{
+        state.itemList.push({name: spliter[0], value: false})
+      }
+    });
+
   }
 
 })

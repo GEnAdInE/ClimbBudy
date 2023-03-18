@@ -110,14 +110,14 @@ const state = reactive({
     icon : "",
     difficulty : "",
     color : "",
-    card: {},
+    card: new Array<string>()
   }
 
 
 })
 const props = defineProps({
         details: {
-            type: Route,
+            type: Object,
             required: false
         }
     });
@@ -134,14 +134,12 @@ const emit = defineEmits(['saved'])
 function save() {
   if (localComp.value) {
     const itemList = localComp.value.state.itemList;
-    const convertedItemList = {};
     for (const { name, value } of itemList) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      convertedItemList[name] = value; //tranquille ca marche quand meme
+      const tmp = name + ":" + value;
+      console.log(tmp)
+      state.localDetails.card.push(tmp);
     }
-    state.localDetails.card = convertedItemList;
-    const convertedroute = new Route('', state.localDetails.name,state.localDetails.description,state.localDetails.difficulty,undefined,state.localDetails.tips,state.localDetails.icon,state.localDetails.author,state.localDetails.location,state.localDetails.color,null,state.localDetails.card);
+    const convertedroute = new Route('', state.localDetails.name,state.localDetails.description,state.localDetails.difficulty,undefined,state.localDetails.tips,state.localDetails.icon,state.localDetails.author,state.localDetails.location,state.localDetails.color,[],state.localDetails.card);
     emit("saved", convertedroute);
   }
 }

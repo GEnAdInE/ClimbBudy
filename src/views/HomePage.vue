@@ -13,7 +13,6 @@
                         <CenterListItem v-for="center in centersRef" :key="center.id" :center="center"
                                         @click="magic(center.id)"/>
 
-
                     </ion-list>
 
                 </ion-content>
@@ -192,7 +191,7 @@ onMounted(async () => {
     }
 
     centersRef.value = await CenterServices.getCentersAsync();
-    console.log(centersRef.value);
+      console.log(centersRef.value);
 
 });
 
