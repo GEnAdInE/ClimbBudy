@@ -170,7 +170,7 @@ const props = defineProps({
 function cardConverted(){
   const mapp = new Map<string,boolean>();
 
-  routeRef.value?.card.forEach((item: any) => {
+  routeRef.value?.card?.forEach((item: any) => {
     const spliter = item.split(':');
     if(spliter[1] == "true"){
       mapp.set(spliter[0],true);

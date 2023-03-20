@@ -123,10 +123,12 @@ function showAddModal() {
 }
 
 async function handleAdd(e: any) {
-    console.log(e);
-    if (centerRef.value) return;
+
+    if (centerRef.value == undefined) return;
     e.center = centerRef.value;
     e.id = null;
+
+    console.log("ADDING ROUTE : ", e);
     const res = await RouteServices.addRoute(e);
 
     if (res && routesRef.value) {
