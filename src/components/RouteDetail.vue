@@ -1,14 +1,14 @@
 <template>
-    <ion-card :color="color">
+    <ion-card :color=" route ? route.color : 'primary'">
         <ion-card-header>
-            <ion-card-title>{{ name }} {{ icon }}🔎
-                <ion-chip color="light" style="float: right;bottom: 1vh">{{ difficulty }}</ion-chip>
+            <ion-card-title>{{route ? route.name : 'Loading' }} {{route ? route.icon : 'Loading'  }}🔎
+                <ion-chip color="light" style="float: right;bottom: 1vh">{{ route ? route.difficulty : 'Loading' }}</ion-chip>
             </ion-card-title>
-            <ion-card-subtitle>{{ author }}</ion-card-subtitle>
+            <ion-card-subtitle>{{ route ? route.author : 'Loading'  }}</ion-card-subtitle>
             <ion-card-content class="infobulle">
                 <ion-chip color="light">
                     <ion-icon :icon="locationOutline"></ion-icon>
-                    <ion-label>{{ location }}</ion-label>
+                    <ion-label>{{  route ? route.location : 'Loading'  }}</ion-label>
                 </ion-chip>
                 <div v-bind:key="key" v-for="[key,value] in state.cardata">
                   <ion-chip v-if="value" color="light" >
@@ -19,8 +19,43 @@
 
             </ion-card-content>
             <ion-card-content>
-                <ion-label>{{ description }}</ion-label>
-              <ion-card-subtitle style="margin-top: 2vh">TIPS : {{ tips }}</ion-card-subtitle>
+                <ion-label>{{  route ? route.description : 'Loading'  }}</ion-label>
+              <ion-card-subtitle style="margin-top: 2vh">TIPS : {{  route ? route.tips : 'Loading'  }}</ion-card-subtitle>
+              <ion-grid>
+                <ion-row style="display: flex; align-items: center">
+                  <ion-col>
+                    <ion-label>Technique : </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-progress-bar color="medium" :value=" route ? route.tech/100 : 0.5 "></ion-progress-bar>
+                  </ion-col>
+                </ion-row>
+                <ion-row style="display: flex; align-items: center">
+                  <ion-col>
+                    <ion-label>Resistance : </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-progress-bar color="medium" :value=" route ? route.resi/100 : 0.5 "></ion-progress-bar>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row style="display: flex; align-items: center">
+                  <ion-col>
+                    <ion-label>Morpho : </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-progress-bar color="medium" :value=" route ? route.morph/100 : 0.5 "></ion-progress-bar>
+                  </ion-col>
+                </ion-row>
+                <ion-row style="display: flex; align-items: center">
+                  <ion-col>
+                    <ion-label>Dynamics : </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-progress-bar color="medium" :value=" route ? route.dyn/100 : 0.5 "></ion-progress-bar>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
             </ion-card-content>
         </ion-card-header>
 
@@ -36,49 +71,23 @@ import {
     IonCardTitle,
     IonChip,
     IonIcon,
-    IonLabel
+    IonLabel,
+    IonProgressBar,
+    IonGrid,
+    IonRow,
+    IonCol
+
 } from "@ionic/vue";
 import {card, checkmark, locationOutline} from "ionicons/icons";
 import {onMounted, reactive} from "vue";
+import {Route} from "@/data/route";
 
 const props = defineProps({
-    color: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    icon: {
-        type: String,
-        required: true
-    },
-    difficulty: {
-        type: String,
-        required: true
-    },
-    author: {
-        type: String,
-        required: true
-    },
-    tips: {
-        type: String,
-        required: true
-    },
-  description: {
-        type: String,
-        required: true
-    },
-  location: {
-        type: String,
-        required: true
-    },
-  card: {
-        type: Array,
-        required: true
-    }
-});
+  route: {
+    type: Route,
+    required: true
+  },
+})
 
 const state = reactive({
   cardata :new Map<string,boolean>()
@@ -87,7 +96,11 @@ const state = reactive({
 onMounted(() => {
   state.cardata = new Map<string,boolean>();
 
-  props.card?.forEach((item: any) => {
+  console.log("DA PROPS",props.route)
+  if(props.route.card == undefined){
+    return;
+  }
+  props.route.card?.forEach((item: any) => {
     const spliter = item.split(':');
     if(spliter[1] == "true"){
       state.cardata.set(spliter[0],true);

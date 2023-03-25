@@ -27,8 +27,11 @@
                     </ion-card-content>
                 </ion-card-header>
             </ion-card>
-            <div class="rectangleRef" style="height: 45vh; display: flex;  justify-content: center; ">
+          <ion-toast :is-open="true"  message="Welcome , on the beta version of ClimbBudy, there is still bugs it's normal" :duration="5000"></ion-toast>
+
+          <div class="rectangleRef" style="height: 45vh; display: flex;  justify-content: center; ">
             </div>
+
 
         </ion-content>
     </ion-page>
@@ -38,6 +41,7 @@
 import {
     createGesture,
     Gesture,
+    IonToast,
     IonCard,
     IonCardContent,
     IonCardHeader,
