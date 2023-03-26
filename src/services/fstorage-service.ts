@@ -42,12 +42,12 @@ async function sendPhotoToStorage(image : Blob) : Promise<string>{
         return "";
     }
 }
-async function getPhotoFromStorage(filename : string)  {
-    const sref = "images/" + filename
-    const storageRef = fstorage.ref(storage,sref);
-    return fstorage.getDownloadURL(storageRef).then((url) => {
-        return url;
-    });
+async function getPhotoFromStorage(filename: string) {
+    const sref = "images/" + filename;
+    const storageRef = fstorage.ref(storage, sref);
+    const url = await fstorage.getDownloadURL(storageRef);
+    console.log(url);
+    return url;
 }
 
 async function checkIfFileExist (filename : string) {

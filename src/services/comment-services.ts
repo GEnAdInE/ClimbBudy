@@ -181,10 +181,7 @@ export class CommentServices {
         // Get user document
         const newCommentRef = doc(collectionRef);
 
-        console.log(comment)
         const copy = comment.getCleanDataObject();
-        console.log("TG")
-        console.log(copy)
         return await setDoc(newCommentRef, copy).then(
             async () => {
                 // Return the id of the new route
