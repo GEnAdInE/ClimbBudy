@@ -29,6 +29,7 @@
             <RouteDetail :route="routeRef"></RouteDetail>
             <div class="comment-title">
                 <ion-label>Comments :</ion-label>
+                <img id="testtoto" />
             </div>
 
 
@@ -36,10 +37,10 @@
             <CommentListItem v-for="comment in routeRef.comments" :key="comment.id" :comment="comment"/>
 
             <ion-button id="click-trigger" color="secondary" expand="block" shape="round" strong="strong"
-                        style="margin-top: 2vh">Add a comment
+                        style="margin-top: 2vh" @click="showCommentPopover($event)">Add a comment
             </ion-button>
-            <ion-popover ref="sendCommentPopover" alignment="center" side="top" trigger="click-trigger" trigger-action="click">
-                <ion-content>
+            <ion-popover alignment="center" side="top" ref="sendCommentPopover" :is-open="state.isPopoverOpen" @didDismiss="state.isPopoverOpen = false" :event="state.event">
+                <ion-content > <!-- TODO: transform in component -->
                     <ion-card>
                         <ion-card-header>
                             <ion-card-title>Adding a comment</ion-card-title>
@@ -50,9 +51,14 @@
                                 <ion-input id="commentText"></ion-input>
 
                             </ion-item>
-                            <ion-button id="send-btn" color="success" expand="block" style="margin-top: 2vh" @click="sendComment()">
-                                Send
+                          <div style="display: flex; margin-top: 2vh">
+                            <ion-button id="send-btn" color="success" expand="full"  @click="sendComment()">
+                              Send
                             </ion-button>
+                            <ion-button @click="pickMyImages()">
+                              <ion-icon :src="imagesOutline" ></ion-icon>
+                            </ion-button>
+                          </div>
                         </ion-card-content>
                     </ion-card>
 
@@ -129,7 +135,8 @@ import {
     IonInput,
     IonLabel,
     IonModal,
-    IonPage, IonPopover,
+    IonPage,
+    IonPopover,
     IonRow,
     IonTitle,
     IonToolbar,
@@ -137,11 +144,12 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonItem
+    IonItem,
+    IonImg
 } from "@ionic/vue";
 import router from "@/router";
 import {Route} from "@/data/route";
-import {arrowBackCircleOutline, chevronDownCircle, createOutline, shareOutline} from "ionicons/icons";
+import {arrowBackCircleOutline, chevronDownCircle, createOutline, imagesOutline, shareOutline} from "ionicons/icons";
 import RouteDetail from "@/components/RouteDetail.vue";
 import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import QRCodeStyling from "qr-code-styling";
@@ -151,13 +159,22 @@ import {nextTick, onMounted, reactive, ref} from "vue";
 import {RouteServices} from "@/services/route-services";
 import {Comment} from "@/data/comment";
 import {CommentServices} from "@/services/comment-services";
+
+import {pickImages} from "@/services/fstorage-service";
+
 import {Center} from "@/data/center";
 
 const sendCommentPopover = ref();
 
 const qr =  ref<HTMLElement>();
 const routeRef = ref<Route>();
-const state = reactive({isModalOpen : false});
+const state = reactive({
+      isModalOpen : false,
+      isPopoverOpen : false,
+      event : null,
+      theblob: null,
+    }
+);
 const props = defineProps({
     centerId: {
         type: String,
@@ -220,8 +237,14 @@ async function sendComment() {
         return;
     }
 
+
     const comment = new Comment("", routeRef.value, undefined, commentText, "");
+    console.log(state.theblob)
+    if(state.theblob !== null)
+      comment.blobimages.push(state.theblob)
+
     if (await CommentServices.addComment(comment)) {
+
         routeRef.value.comments.push(comment);
     }
 
@@ -239,6 +262,34 @@ function handleSave(route: any) {
 function deleted() {
     console.log("deleted");
     //delete route
+}
+function getImage() {
+  const storageRef = fstorage.ref(storage,"/images/"+"id"); //todo: add id
+  fstorage.getDownloadURL(storageRef)
+      .then((url) => {
+        console.log(url)
+        document?.getElementById("testtoto")?.setAttribute("src",url);
+      }
+      ).catch((error) => {
+    console.log(error);
+  });
+
+}
+
+async function pickMyImages() {
+
+  pickImages().then( (res : any) => {
+   console.log(res)
+
+    state.theblob = res;
+
+ });
+
+}
+
+function showCommentPopover(event: any) {
+    state.event = event;
+    state.isPopoverOpen = !state.isPopoverOpen
 }
 
 function createQrCode() {

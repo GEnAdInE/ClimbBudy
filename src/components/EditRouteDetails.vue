@@ -190,7 +190,7 @@ const state = reactive({
 })
 const props = defineProps({
         details: {
-            type: Object,
+            type: Object as () => Route,
             required: false
         }
     });

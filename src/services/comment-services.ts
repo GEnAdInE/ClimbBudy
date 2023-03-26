@@ -7,6 +7,7 @@ import {RouteServices} from "@/services/route-services";
 import {Center} from "@/data/center";
 import {UserServices} from "@/services/user-services";
 import Firestore = firestore.Firestore;
+import {checkIfFileExist, getPhotoFromStorage, sendPhotoToStorage} from "@/services/fstorage-service";
 
 export class CommentServices {
 
@@ -42,6 +43,8 @@ export class CommentServices {
         // @ts-ignore
         const comment: Comment = commentDoc.data() satisfies Comment;
         comment.route = route;
+
+
 
         return comment;
     }
@@ -164,6 +167,15 @@ export class CommentServices {
             comment.route = routes[0] || null;
         }
 
+        if (comment.blobimages.length > 0) {
+            for (const blo of comment.blobimages) {
+               await sendPhotoToStorage(blo).then((url) => {
+                    comment.images.push(url);
+
+                });
+            }
+        }
+
         const collectionRef = collection(this.firestore, sprintf(this.collectionPath, comment.route?.center?.id, comment.route?.id));
 
         // Get user document
@@ -171,9 +183,10 @@ export class CommentServices {
 
         const copy = comment.getCleanDataObject();
         return await setDoc(newCommentRef, copy).then(
-            () => {
+            async () => {
                 // Return the id of the new route
                 comment.id = newCommentRef.id;
+
                 return true;
             }
         ).catch(
