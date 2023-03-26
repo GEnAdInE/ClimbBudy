@@ -19,15 +19,15 @@
 import {BarcodeScanner, SupportedFormat} from '@capacitor-community/barcode-scanner';
 import {arrowBackCircleOutline} from "ionicons/icons";
 import {
-    IonFab,
-    IonFabButton,
-    IonHeader,
-    IonIcon,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    isPlatform,
-    toastController
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  isPlatform,
+  toastController, useBackButton
 } from "@ionic/vue";
 import router from "@/router";
 
@@ -44,6 +44,7 @@ export default {
     },
     data() {
         return {
+            backColor : '',
             qr: '',
             isScanning: false,
         }
@@ -64,11 +65,11 @@ export default {
             BarcodeScanner.showBackground();
             document.querySelector('body').classList.remove('scanner-active');
             if (isPlatform('ios')) {
-                document.querySelector('.ios body').style.setProperty('--ion-background-color', 'black');
+                document.querySelector('.ios body').style.setProperty('--ion-background-color', this.backColor);
 
             }
             if (isPlatform('android')) {
-                document.querySelector('.md body').style.setProperty('--ion-background-color', 'black');
+                document.querySelector('.md body').style.setProperty('--ion-background-color', this.backColor);
             }
         },
         realHide() {
@@ -76,16 +77,19 @@ export default {
             BarcodeScanner.showBackground();
             document.querySelector('body').classList.add('scanner-active');
             if (isPlatform('ios')) {
+                this.backColor = document.querySelector('.ios body').style.getPropertyValue('--ion-background-color');
                 document.querySelector('.ios body').style.setProperty('--ion-background-color', 'transparent');
 
             }
             if (isPlatform('android')) {
-                document.querySelector('.md body').style.setProperty('--ion-background-color', 'transparent');
+              this.backColor = document.querySelector('.md body').style.getPropertyValue('--ion-background-color');
+              document.querySelector('.md body').style.setProperty('--ion-background-color', 'transparent');
             }
         }
 
     },
     setup() {
+
         return {
             arrowBackCircleOutline
         }
@@ -134,7 +138,13 @@ export default {
 
 
     },
-
+    ionViewDidLeave() {
+        if (!isPlatform('desktop') && !isPlatform('mobileweb')) {
+            BarcodeScanner.stopScan();
+            this.isScanning = false;
+            this.realShow();
+        }
+    }
 }
 </script>
 
