@@ -84,7 +84,7 @@ import {Route} from "@/data/route";
 
 const props = defineProps({
   route: {
-    type: Route,
+    type: Object as () => Route,
     required: true
   },
 })

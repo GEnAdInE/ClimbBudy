@@ -263,18 +263,6 @@ function deleted() {
     console.log("deleted");
     //delete route
 }
-function getImage() {
-  const storageRef = fstorage.ref(storage,"/images/"+"id"); //todo: add id
-  fstorage.getDownloadURL(storageRef)
-      .then((url) => {
-        console.log(url)
-        document?.getElementById("testtoto")?.setAttribute("src",url);
-      }
-      ).catch((error) => {
-    console.log(error);
-  });
-
-}
 
 async function pickMyImages() {
 
