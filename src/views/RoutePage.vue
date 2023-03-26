@@ -2,15 +2,15 @@
     <ion-page v-if="routeRef">
         <ion-header :translucent="true">
             <ion-toolbar>
-                <ion-title>Climb buddy || PUT NAME OF CENTER HERE</ion-title>
+                <ion-title>Climb buddy | {{routeRef.center.name}}</ion-title>
 
             </ion-toolbar>
 
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content class="ion-padding" :scroll-events="false">
 
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
-                <ion-fab-button color="tertiary">
+                <ion-fab-button color="tertiary" :disabled="false">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="bottom">
@@ -24,11 +24,9 @@
             </ion-fab>
 
 
-            <!-- ici remplacer tout les props pas juste un seul props detail -->
+            <!--TODO: ici remplacer tout les props pas juste un seul props detail -->
 
-            <RouteDetail :author="routeRef.author" :color="routeRef.color" :description="routeRef.description"
-                         :difficulty="routeRef.difficulty" :icon="routeRef.icon"
-                         :location="routeRef.location" :name="routeRef.name" :card="routeRef.card"></RouteDetail>
+            <RouteDetail :route="routeRef"></RouteDetail>
             <div class="comment-title">
                 <ion-label>Comments :</ion-label>
                 <img id="testtoto" />
@@ -97,13 +95,16 @@
             <div class="top-right">{{ routeRef.difficulty }}</div>
             <div class="bottom-left">{{ routeRef.difficulty }}</div>
             <div class="bottom-right">{{ routeRef.difficulty }}</div>
-            <div class="title">
+            <div class="title-top">
                 <ion-label>{{ routeRef.name }}</ion-label>
             </div>
+          <div class="title-bottom">
+            <ion-label>{{ routeRef.name }}</ion-label>
+          </div>
             <div class="center">
-                <div :id="'qr'+routeRef.id" class="qr"></div>
+                <div ref="qr" id="qr" class="qr"></div>
                 <ion-grid>
-                    <ion-row :key="item" v-for="(val,item) in routeRef.card" >
+                    <ion-row :key="item" v-for="[val,item] in cardConverted()" >
                         <ion-col size="8">
                             <ion-label color="superdark">{{item}}</ion-label>
                         </ion-col>
@@ -154,21 +155,18 @@ import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import QRCodeStyling from "qr-code-styling";
 import * as htmlToImage from "html-to-image";
 import CommentListItem from "@/components/CommentListItem.vue";
-import {onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref} from "vue";
 import {RouteServices} from "@/services/route-services";
 import {Comment} from "@/data/comment";
 import {CommentServices} from "@/services/comment-services";
-import {Camera} from "@capacitor/camera";
-import {storage} from "@/firebase";
-import * as fstorage from "firebase/storage";
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import * as fs from "fs";
-import {doc} from "firebase/firestore";
+
 import {pickImages} from "@/services/fstorage-service";
 
+import {Center} from "@/data/center";
 
 const sendCommentPopover = ref();
 
+const qr =  ref<HTMLElement>();
 const routeRef = ref<Route>();
 const state = reactive({
       isModalOpen : false,
@@ -187,6 +185,20 @@ const props = defineProps({
         required: true
     }
 })
+
+function cardConverted(){
+  const mapp = new Map<string,boolean>();
+
+  routeRef.value?.card?.forEach((item: any) => {
+    const spliter = item.split(':');
+    if(spliter[1] == "true"){
+      mapp.set(spliter[0],true);
+    }else{
+      mapp.set(spliter[0],false);
+    }
+  });
+  return mapp;
+}
 
 function convertTrueFalse(value: boolean){
     if(value){
@@ -369,17 +381,17 @@ function createQrCode() {
 
     })
 
-    const el = document.getElementById('qr' + routeRef.value?.id)
-    if (!el) return;
-    qrCode.append();
-
+    qrCode.append(qr.value);
+    console.log(qr.value)
 
     //qrCode.download({ name: "qr", extension: "png" });
 }
 
 
 function createImage() {
-    const node = document.getElementById('square' + routeRef.value?.id);
+  console.log(qr.value)
+
+  const node = document.getElementById('square' + routeRef.value?.id);
 
     // Ensure the node exists
     if (!node) return;
@@ -391,8 +403,13 @@ function createImage() {
 
     htmlToImage.toPng(node)
         .then(function (dataUrl) {
+          console.log(dataUrl)
             node.style.visibility = "hidden";
-            //download(dataUrl, 'my-node.png');
+          // assume that the image data is stored in a Blob object called "imageBlob"
+          const downloadLink = document.createElement("a");
+          downloadLink.href = dataUrl;
+          downloadLink.download = "card.png"
+          downloadLink.click();
 
         });
 }
@@ -401,8 +418,8 @@ function createImage() {
 onMounted(async () => {
     //get route details
     routeRef.value = await RouteServices.getRouteAsync(props.centerId, props.routeId, true);
+    await  nextTick()
     createQrCode();
-
 });
 
 
@@ -429,23 +446,23 @@ onMounted(async () => {
 }
 
 .top-left {
-    top: 0;
-    left: 0;
+    top: 5px;
+    left: 5px;
 }
 
 .top-right {
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
 }
 
 .bottom-left {
-    bottom: 0;
-    left: 0;
+    bottom:   5px;
+    left: 5px;
 }
 
 .bottom-right {
-    bottom: 0;
-    right: 0;
+    bottom: 5px;
+    right: 5px;
 }
 
 ion-col {
@@ -464,12 +481,21 @@ ion-col {
     width: 100%;
 }
 
-.title {
+.title-top {
     display: flex;
     justify-content: center;
     font-size: 40px;
     font-weight: bold;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.title-bottom {
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 390px;
 }
 
 .qr {

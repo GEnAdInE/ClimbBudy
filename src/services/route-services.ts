@@ -212,11 +212,15 @@ export class RouteServices {
      */
     public static async addRoute(route: Route): Promise<boolean> {
 
+        console.log("addRoute", route);
         // If route.center_id is null, then grab the first center
+
         if (route.center === null || route.center === undefined || route.center.id === null || route.center.id === undefined || route.center.id === '') {
             const centers = await CenterServices.getCentersAsync();
             route.center = centers[0] || null;
         }
+
+
 
         const collectionRef = collection(this.firestore, sprintf(this.collectionPath, route.center.id));
 

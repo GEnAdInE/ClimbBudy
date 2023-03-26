@@ -13,6 +13,7 @@
 import {chevronForward} from 'ionicons/icons';
 import {Center} from "@/data/center";
 import {IonIcon, IonItem, IonLabel} from "@ionic/vue";
+import {onMounted} from "vue";
 
 
 const props = defineProps({
@@ -32,6 +33,10 @@ function isIos() {
     const win = window as any;
     return win && win.Ionic && win.Ionic.mode === 'ios';
 }
+
+onMounted( () =>{
+  console.log(props.center)
+})
 
 </script>
 

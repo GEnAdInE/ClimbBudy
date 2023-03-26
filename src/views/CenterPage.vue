@@ -7,9 +7,9 @@
 
 
         </ion-header>
-        <ion-content>
+        <ion-content :scroll-events="false">
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
-                <ion-fab-button color="tertiary">
+                <ion-fab-button color="tertiary" :disabled="false">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="bottom">
@@ -123,12 +123,14 @@ function showAddModal() {
 }
 
 async function handleAdd(e: any) {
-    console.log(e);
-    if (!props.centerId) return;
-    e.center_id = props.centerId;
+
+    if (centerRef.value == undefined) return;
+    e.center = centerRef.value;
     e.id = null;
+
+    console.log("ADDING ROUTE : ", e);
     const res = await RouteServices.addRoute(e);
-    console.log(res);
+
     if (res && routesRef.value) {
         routesRef.value.push(e);
     }
