@@ -1,6 +1,7 @@
 import {Comment} from "@/data/comment";
 import {Center} from "@/data/center";
 import {AbstractData} from "@/data/abstract-data";
+import {DifficultyPerCategory} from "@/data/difficulty-per-category";
 
 export class Route extends AbstractData {
 
@@ -18,15 +19,25 @@ export class Route extends AbstractData {
         public location: string,
         public color: string,
         public comments: Comment[] = [],
-        public tech : number,
-        public resi : number,
-        public morph : number,
-        public dyn  : number,
+        public difficultyPerCategory: DifficultyPerCategory[] = Route.defaultDifficultyPerCategory,
 
 
 
         public card: string[] = [],
     ) {
         super();
+    }
+
+    static defaultDifficultyPerCategory: DifficultyPerCategory[] = [
+        new DifficultyPerCategory('Technique', 50),
+        new DifficultyPerCategory('Resistance', 50),
+        new DifficultyPerCategory('Morpho', 50),
+        new DifficultyPerCategory('Dynamics', 50),
+    ];
+
+    getCleanDataObject(): any {
+        const cleaned = super.getCleanDataObject();
+        cleaned.difficultyPerCategory = JSON.stringify(this.difficultyPerCategory);
+        return cleaned;
     }
 }
