@@ -1,12 +1,6 @@
 <template>
     <ion-page v-if="routeRef">
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-title>Climb buddy | {{routeRef.center.name}}</ion-title>
-
-            </ion-toolbar>
-
-        </ion-header>
+        <AppHeader :second-part="routeRef.center.name"/>
         <ion-content class="ion-padding" :scroll-events="false">
 
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
@@ -163,6 +157,7 @@ import {CommentServices} from "@/services/comment-services";
 import {pickImages} from "@/services/fstorage-service";
 
 import {Center} from "@/data/center";
+import AppHeader from "@/components/AppHeader.vue";
 
 const sendCommentPopover = ref();
 
@@ -228,7 +223,7 @@ async function sendComment() {
     // Disable the button
     sendBtn.setAttribute("disabled", "true");
 
-    // Retrieve the comment data from the form
+    // Retrieve the comment data from the state
     const commentText = (document.getElementById("commentText") as HTMLInputElement).value;
 
     if (routeRef.value === undefined) {

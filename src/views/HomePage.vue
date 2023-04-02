@@ -1,12 +1,8 @@
 <template>
     <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-title>Climb buddy</ion-title>
-            </ion-toolbar>
-        </ion-header>
+        <AppHeader/>
 
-        <ion-content scroll-x="false" scroll-y="false">
+        <ion-content scroll-x="false" scroll-y="false" id="main-content">
             <div style="height: 45vh">
                 <ion-content>
                     <ion-list>
@@ -61,6 +57,7 @@ import router from "@/router";
 import {CenterServices} from "@/services/center-services";
 import {Center} from "@/data/center";
 import CenterListItem from "@/components/CenterListItem.vue";
+import AppHeader from "@/components/AppHeader.vue";
 
 
 function doSomehting(detail: any): void {

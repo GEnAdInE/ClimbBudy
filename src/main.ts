@@ -24,6 +24,9 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 import {VueFire, VueFireAuth} from "vuefire";
 import {firebaseApp} from './firebase';
+import {createStore} from "vuex";
+import createPersistedState from "vuex-persistedstate";
+import {UserCredential} from "@firebase/auth";
 
 
 const app = createApp(App)
@@ -36,6 +39,26 @@ const app = createApp(App)
         ]
     });
 
+const store = createStore(
+    {
+        state() {
+            return {
+                // User object of type UserCredential from firebase being null by default
+                user: null as UserCredential | null
+            }
+        },
+        mutations: {
+            // Mutation to set user
+            setUser(state: { user: UserCredential | null; }, user: UserCredential | null) {
+                console.log("Setting user to: ", user);
+                state.user = user;
+            }
+        },
+        plugins: [createPersistedState({storage: window.sessionStorage})],
+    }
+)
+
+app.use(store);
 router.isReady().then(() => {
     app.mount('#app');
 });

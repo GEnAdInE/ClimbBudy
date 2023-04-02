@@ -6,9 +6,8 @@ export class User extends AbstractData {
 
     constructor(
         public id: string,
-        public name: string,
+        public username: string,
         public email: string,
-        public password: string,
         public center_id: string,
     ) {
         super();

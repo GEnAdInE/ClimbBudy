@@ -4,6 +4,8 @@ import HomePage from '../views/HomePage.vue'
 import CameraPage from '../views/CameraPage.vue'
 import CenterPage from '../views/CenterPage.vue'
 import RoutePage from '../views/RoutePage.vue'
+import LoginForm from "@/views/LoginForm.vue";
+import LogoutPage from "@/views/LogoutPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -14,6 +16,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/home',
         name: 'Home',
         component: HomePage
+    },
+    {
+        path: '/login',
+        name: 'Login or Register',
+        component: () => LoginForm
+    },
+    {
+        path: '/logout',
+        name: 'Logout',
+        component: () => LogoutPage
     },
     {
         path: '/camera',
@@ -31,7 +43,6 @@ const routes: Array<RouteRecordRaw> = [
         component: RoutePage,
         props: true,
     },
-
     {
         path: '/centers/:centerId/routes/:routeId/comments/:id',
         component: () => import('../views/ViewMessagePage.vue'),
