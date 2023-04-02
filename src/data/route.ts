@@ -5,7 +5,6 @@ import {DifficultyPerCategory} from "@/data/difficulty-per-category";
 
 export class Route extends AbstractData {
 
-    keysToIgnore: string[] = ['id', 'center', 'comments'];
 
     constructor(
         public id: string,
@@ -26,6 +25,21 @@ export class Route extends AbstractData {
         public card: string[] = [],
     ) {
         super();
+        this.keysToIgnore.push('id', 'center', 'comments');
+
+    }
+
+    static defaultDifficultyPerCategory: DifficultyPerCategory[] = [
+        new DifficultyPerCategory('Technique', 50),
+        new DifficultyPerCategory('Resistance', 50),
+        new DifficultyPerCategory('Morpho', 50),
+        new DifficultyPerCategory('Dynamics', 50),
+    ];
+
+    getCleanDataObject(): any {
+        const cleaned = super.getCleanDataObject();
+        cleaned.difficultyPerCategory = JSON.stringify(this.difficultyPerCategory);
+        return cleaned;
     }
 
     static defaultDifficultyPerCategory: DifficultyPerCategory[] = [

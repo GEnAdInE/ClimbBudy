@@ -120,6 +120,7 @@ export class RouteServices {
             if(routeDoc.data().difficultyPerCategory) {
                 route.difficultyPerCategory = JSON.parse(routeDoc.data().difficultyPerCategory);
             }
+
             if (loadChildren) {
                 route.comments = await CommentServices.getCommentsOfRouteAsync(route);
             }

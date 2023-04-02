@@ -3,7 +3,6 @@ import {AbstractData} from "@/data/abstract-data";
 
 export class Center extends AbstractData {
 
-    keysToIgnore: string[] = ['id', 'routes'];
 
     constructor(
         public id: string,
@@ -12,7 +11,9 @@ export class Center extends AbstractData {
         public website: string,
         public routes: Route[] = [],
     ) {
+
         super();
+        this.keysToIgnore.push('id', 'route');
     }
 
 }
