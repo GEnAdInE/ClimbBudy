@@ -1,4 +1,6 @@
-    <ion-card :color=" route ? route.color : 'primary'">
+<template>
+
+  <ion-card :color=" route ? route.color : 'primary'">
         <ion-card-header>
             <ion-card-title>{{ route ? route.name : 'Loading' }} {{ route ? route.icon : 'Loading' }}🔎
                 <ion-chip color="light" style="float: right;bottom: 1vh">{{
@@ -43,19 +45,6 @@
                 </ion-grid>
             </ion-card-content>
         </ion-card-header>
-
-            <ion-col>
-              <ion-label>{{ difficultyCategory.name }} :</ion-label>
-            </ion-col>
-            <ion-col>
-              <ion-progress-bar color="medium" :value="difficultyCategory.difficulty / 100"></ion-progress-bar>
-            </ion-col>
-          </ion-row>
-
-        </ion-grid>
-      </ion-card-content>
-    </ion-card-header>
-
   </ion-card>
 </template>
 
@@ -76,8 +65,8 @@ import {
 
 } from "@ionic/vue";
 import {checkmark, locationOutline} from "ionicons/icons";
-import {onMounted, reactive} from "vue";
 import {Route} from "@/data/route";
+import {onMounted, reactive} from "vue";
 
 const props = defineProps({
     route: {
@@ -113,16 +102,16 @@ onMounted(() => {
 
     }
     props.route.card?.forEach((item: any) => {
-        const spliter = item.split(':');
-        if (spliter[1] == "true") {
-            state.cardata.set(spliter[0], true);
-        } else {
-            state.cardata.set(spliter[0], false);
-        }
+      const spliter = item.split(':');
+      if (spliter[1] == "true") {
+        state.cardata.set(spliter[0], true);
+      } else {
+        state.cardata.set(spliter[0], false);
+      }
     });
     console.log(state.cardata);
 
-
+  });
 });
 
 </script>

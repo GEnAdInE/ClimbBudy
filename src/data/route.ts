@@ -41,17 +41,4 @@ export class Route extends AbstractData {
         cleaned.difficultyPerCategory = JSON.stringify(this.difficultyPerCategory);
         return cleaned;
     }
-
-    static defaultDifficultyPerCategory: DifficultyPerCategory[] = [
-        new DifficultyPerCategory('Technique', 50),
-        new DifficultyPerCategory('Resistance', 50),
-        new DifficultyPerCategory('Morpho', 50),
-        new DifficultyPerCategory('Dynamics', 50),
-    ];
-
-    getCleanDataObject(): any {
-        const cleaned = super.getCleanDataObject();
-        cleaned.difficultyPerCategory = JSON.stringify(this.difficultyPerCategory);
-        return cleaned;
-    }
 }

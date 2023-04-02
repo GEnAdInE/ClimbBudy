@@ -10,7 +10,7 @@
         <ion-content class="ion-padding" :scroll-events="false">
 
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
-                <ion-fab-button color="tertiary" :disabled="true">
+                <ion-fab-button color="tertiary" :disabled="false">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="bottom">
