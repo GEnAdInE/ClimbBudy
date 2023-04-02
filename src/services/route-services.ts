@@ -43,11 +43,17 @@ export class RouteServices {
         const routeCollection = sprintf(this.collectionPath, centerId);
         const routeDoc = await getDoc(doc(this.firestore, routeCollection, id));
 
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const route: Route = routeDoc.data() satisfies Route;
         route.center = center;
         route.id = id;
+
+        // Make routeDoc.data().difficultyPerCategory a DifficultyPerCategory[]
+        if(routeDoc.data()?.difficultyPerCategory) {
+            route.difficultyPerCategory = JSON.parse(routeDoc.data()?.difficultyPerCategory);
+        }
 
         if (loadChildren) {
             route.comments = await CommentServices.getCommentsOfRouteAsync(route);
@@ -103,13 +109,17 @@ export class RouteServices {
         // Get all routes of the center
         const routes = await getDocs(routesCollection);
 
-        for (const doc of routes.docs) {
+        for (const routeDoc of routes.docs) {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const route: Route = doc.data() satisfies Route;
-            route.id = doc.id;
+            const route: Route = routeDoc.data() satisfies Route;
+            route.id = routeDoc.id;
             route.center = center;
+
+            if(routeDoc.data().difficultyPerCategory) {
+                route.difficultyPerCategory = JSON.parse(routeDoc.data().difficultyPerCategory);
+            }
             if (loadChildren) {
                 route.comments = await CommentServices.getCommentsOfRouteAsync(route);
             }
@@ -146,11 +156,16 @@ export class RouteServices {
 
         onSnapshot(routesCollection, (querySnapshot: QuerySnapshot<DocumentData>) => {
             const newRouteList: Route[] = [];
-            for (const doc of querySnapshot.docs) {
+            for (const routeDoc of querySnapshot.docs) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                const route: Route = doc.data() satisfies Route;
-                route.id = doc.id;
+                const route: Route = routeDoc.data() satisfies Route;
+                route.id = routeDoc.id;
+
+                // Make routeDoc.data().difficultyPerCategory a DifficultyPerCategory[]
+                if(routeDoc.data().difficultyPerCategory) {
+                    route.difficultyPerCategory = JSON.parse(routeDoc.data().difficultyPerCategory);
+                }
 
                 newRouteList.push(route);
             }
