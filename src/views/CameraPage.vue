@@ -1,16 +1,14 @@
 <template>
     <ion-page :class="{ activescann : isScanning, notactivescann : !isScanning }">
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-title>Climb buddy</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-            <ion-fab-button @click="goBack()">
-                <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-        <div v-if="isScanning" class="scan-box"></div>
+        <AppHeader/>
+        <ion-content id="main-content">
+            <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+                <ion-fab-button @click="goBack()">
+                    <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
+                </ion-fab-button>
+            </ion-fab>
+            <div v-if="isScanning" class="scan-box"></div>
+        </ion-content>
     </ion-page>
 
 </template>
@@ -31,17 +29,16 @@ import {
 } from "@ionic/vue";
 import router from "@/router";
 import {getAnalytics, logEvent} from "firebase/analytics";
+import AppHeader from "@/components/AppHeader.vue";
 
 export default {
     name: "CameraPage",
     components: {
+        AppHeader,
         IonPage,
         IonFab,
         IonFabButton,
         IonIcon,
-        IonHeader,
-        IonToolbar,
-        IonTitle,
     },
     data() {
         return {

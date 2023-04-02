@@ -3,6 +3,10 @@
         <ion-header>
             <ion-toolbar>
                 <ion-title>Menu Content</ion-title>
+                <!-- Add a cross icon to close the menu -->
+                <ion-menu-toggle slot="end" style="margin-right: 5px;">
+                    <ion-icon :icon="close"></ion-icon>
+                </ion-menu-toggle>
             </ion-toolbar>
         </ion-header>
         <ion-content id="menu-content" class="ion-padding">
@@ -23,8 +27,6 @@
                 <ion-icon slot="start" :icon="logOut"></ion-icon>
                 Logout
             </ion-button>
-
-
 
         </ion-content>
     </ion-menu>
@@ -47,7 +49,7 @@
 import {IonHeader, IonTitle, IonToolbar} from '@ionic/vue';
 import {reactive} from "vue";
 import {useStore} from "vuex";
-import {home, logIn, logOut} from "ionicons/icons";
+import {home, logIn, logOut, close} from "ionicons/icons";
 import router from "@/router";
 
 // Be able to pass the argument "secondPart" to the component so the call can be like this:
@@ -72,6 +74,13 @@ const state = reactive({
     contentId: props.contentId,
     user: store.state.user
 })
+
+if(state.secondPart){
+    state.secondPart = state.secondPart.trim()
+    if(state.secondPart.length === 0){
+        state.secondPart = null
+    }
+}
 
 if (!state.contentId) {
     state.contentId = "main-content"

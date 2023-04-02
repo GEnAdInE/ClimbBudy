@@ -13,26 +13,26 @@
                     <ion-label position="floating">Email</ion-label>
                     <ion-input :disabled="state.register" type="email"
                                @change="changeInputValue('email', $event.target.value)"></ion-input>
-                    <p v-if="state.errors.email" class="error">{{ state.errors.email }}</p>
                 </ion-item>
+                <p v-if="state.errors.email" class="error">{{ state.errors.email }}</p>
 
                 <ion-item>
                     <ion-label position="floating">Password</ion-label>
-                    <ion-input :disabled="state.register && state.errors.password" type="password"
+                    <ion-input :disabled="state.register && !state.errors.password" type="password"
                                @change="changeInputValue('password', $event.target.value)"></ion-input>
-                    <p v-if="state.errors.password" class="error">{{ state.errors.password }}</p>
                 </ion-item>
+                <p v-if="state.errors.password" class="error">{{ state.errors.password }}</p>
 
-                <div v-if="state.register">
-                    Last step, choose your username
+                <div v-if="state.register" style="margin-top:40px;">
+                    <h4>Last step, choose your username</h4>
                     <ion-item>
                         <ion-label position="floating">Username</ion-label>
                         <ion-input type="text" @change="changeInputValue('username', $event.target.value)"></ion-input>
-                        <p v-if="state.errors.username" class="error">{{ state.errors.username }}</p>
                     </ion-item>
+                    <p v-if="state.errors.username" class="error">{{ state.errors.username }}</p>
                 </div>
 
-                <ion-button expand="block" @click="loginOrRegister">Continue</ion-button>
+                <ion-button style="margin-top: 50px;" expand="block" @click="loginOrRegister">Continue</ion-button>
 
 
             </ion-card-content>
@@ -179,7 +179,7 @@ async function checkEmailAvailability(): Promise<boolean> {
 }
 
 function loginOrRegister() {
-    if (store.state.user) {
+    /*if (store.state.user) {
         const user = new User(store.state.user.uid, state.form.username, state.form.email, "")
         UserServices.updateUserAsync(user).then(
             () => {
@@ -192,115 +192,64 @@ function loginOrRegister() {
         )
 
         return;
+    }*/
+
+    //Entrée : l'utilisateur essai de se connecter
+    if(!state.register) {
+        UserServices.loginOrRegisterUserAsync(store, state.form.email, state.form.password).then(
+            (user) => {
+                console.log('user', user)
+                state.register = false
+            }
+        ).catch(
+            (error) => {
+                if (error.code === 'auth/user-not-found') {
+                    state.register = true
+                    return;
+                }
+
+                if (error.code === 'auth/wrong-password') {
+                    state.errors.password = 'Wrong password'
+                    return;
+                }
+
+                if (error.code === 'auth/invalid-email') {
+                    state.errors.email = 'Invalid email'
+                    return;
+                }
+
+                state.errors.global = error.message
+            }
+        )
+
+        return;
     }
 
 
-    console.log('loginOrRegister', state.form)
-    UserServices.loginOrRegisterUserAsync(store, state.form.email, state.form.password).then(
+
+    UserServices.createUserAsync(store, state.form.email, state.form.password, state.form.username).then(
         (user) => {
-            console.log('user', user)
-            state.register = false
+            router.push('/')
         }
     ).catch(
         (error) => {
-            if (error.code === 'auth/user-not-found') {
-                UserServices.createUserAsync(store, state.form.email, state.form.password).then(
-                    (user) => {
-                        console.log('user', user)
-                        state.register = true
-                    }
-                ).catch(
-                    (error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
+            const errorCode = error.code;
+            const errorMessage = error.message;
 
-                        if (errorCode === 'auth/weak-password') {
-                            state.errors.password = 'Password is too weak'
-                            return;
-                        }
-
-                        if (errorCode === 'auth/email-already-in-use') {
-                            state.errors.email = 'Email is already in use'
-                            return;
-                        }
-
-                        state.errors.global = errorMessage
-                        return;
-                    }
-                )
-
+            if (errorCode === 'auth/weak-password') {
+                state.errors.password = 'Password is too weak'
                 return;
             }
 
-            if (error.code === 'auth/wrong-password') {
-                state.errors.password = 'Wrong password'
+            if (errorCode === 'auth/email-already-in-use') {
+                state.errors.email = 'Email is already in use'
                 return;
             }
 
-            if (error.code === 'auth/invalid-email') {
-                state.errors.email = 'Invalid email'
-                return;
-            }
-
-            state.errors.global = error.message
+            state.errors.global = errorMessage
+            return;
         }
     )
-    /*signInWithEmailAndPassword(auth, state.form.email, state.form.password).then(
-        (userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(user)
-            state.register = false
-            store.commit('setUser', user)
-            router.push('/')
-        }
-    ).catch((error) => {
-        console.log(error)
-        // If the error is that the user does not exist, then we create the user
-        if (error.code === 'auth/user-not-found') {
-            createUserWithEmailAndPassword(auth, state.form.email, state.form.password).then(
-                (userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    state.register = true
-                    store.commit('setUser', user)
-                    router.push('/')
-
-                    usersService.createUser(user.uid, state.form.username, state.form.email)
-                }
-            ).catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-
-                if (errorCode === 'auth/weak-password') {
-                    state.errors.password = 'Password is too weak'
-                    return;
-                }
-
-                if (errorCode === 'auth/email-already-in-use') {
-                    state.errors.email = 'Email is already in use'
-                    return;
-                }
-
-                state.errors.global = errorMessage
-            });
-            return;
-        }
-
-        if (error.code === 'auth/wrong-password') {
-            state.errors.password = 'Wrong password'
-            return;
-        }
-
-        if (error.code === 'auth/invalid-email') {
-            state.errors.email = 'Invalid email'
-            return;
-        }
-
-        state.errors.global = error.message
-    })*/
-
-    console.log("the store", store)
 }
 
 </script>

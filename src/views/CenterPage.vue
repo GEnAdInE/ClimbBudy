@@ -1,9 +1,8 @@
 <template>
     <ion-page>
-        <AppHeader v-if="!centerRef"/>
         <ion-loading message="Loading..." duration="5000" :is-open="!centerRef" ></ion-loading>
         <AppHeader v-if="centerRef" :second-part="centerRef.name"/>
-        <ion-content  v-if="centerRef" :scroll-events="false">
+        <ion-content id="main-content" v-if="centerRef" :scroll-events="false">
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
                 <ion-fab-button :disabled="false" color="tertiary">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>

@@ -1,7 +1,7 @@
 <template>
     <ion-page v-if="routeRef">
         <AppHeader :second-part="routeRef.center.name"/>
-        <ion-content class="ion-padding" :scroll-events="false">
+        <ion-content id="main-content" class="ion-padding" :scroll-events="false">
 
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
                 <ion-fab-button color="tertiary" :disabled="false">

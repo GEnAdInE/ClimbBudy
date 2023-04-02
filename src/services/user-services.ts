@@ -4,7 +4,7 @@
 
 // Import firebase from @firebase
 import firestore, {CollectionReference} from '@firebase/firestore';
-import {collection, doc, getDoc, getDocs, getFirestore, updateDoc} from 'firebase/firestore';
+import {collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc} from 'firebase/firestore';
 import {User} from "@/data/user";
 import {firebaseApp} from "@/firebase";
 import Firestore = firestore.Firestore;
@@ -34,6 +34,7 @@ export class UserServices {
         return user;
     }
 
+
     /**
      * Logs in a user
      * @param store The store to commit the user to
@@ -47,17 +48,6 @@ export class UserServices {
 
         store.commit('setUser', userCredential.user)
         return new User(userCredential.user.uid, "", email, "")
-
-        //TODO: Fix this (insufficient permissions)
-        /*
-        const user = await this.getUserAsync(userCredential.user.uid)
-        if(user != null) {
-            const newUser = new User(userCredential.user.uid, user.username, email, user.center_id)
-            this.store.commit('setUser', userCredential.user)
-            return newUser
-        } else {
-            return user
-        }*/
     }
 
 
@@ -77,7 +67,6 @@ export class UserServices {
         const userObj = new User(user.uid, username || "", email, "")
 
         if(username != null) {
-            // TODO: Fix this (insufficient permissions)
             // Save the username in the database
             await this.updateUserAsync(userObj)
         }
@@ -92,10 +81,19 @@ export class UserServices {
      * @param user The user to update
      */
     public static async updateUserAsync(user: User): Promise<void> {
-        // TODO: Fix this (insufficient permissions)
         await updateDoc(doc(this.collection, user.id), {
             username: user.username,
             center_id: user.center_id
+        }).catch((error) => {
+            console.error(error)
+            // If the error is that the user does not exist, create the user
+            if(error.code == "not-found") {
+                const userDoc = doc(this.collection, user.id)
+                setDoc(userDoc, {
+                    username: user.username,
+                    center_id: user.center_id
+                })
+            }
         })
     }
 
