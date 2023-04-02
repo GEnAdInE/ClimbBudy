@@ -32,7 +32,7 @@
                     <p v-if="state.errors.username" class="error">{{ state.errors.username }}</p>
                 </div>
 
-                <ion-button style="margin-top: 50px;" expand="block" @click="loginOrRegister">Continue</ion-button>
+                <ion-button expand="block" style="margin-top: 50px;" @click="loginOrRegister">Continue</ion-button>
 
 
             </ion-card-content>
@@ -41,17 +41,12 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, watch} from 'vue'
+import {reactive} from 'vue'
 import {useStore} from 'vuex'
 import firestore from "@firebase/firestore";
-import {firebaseApp} from "@/firebase";
-import {collection, getDocs, getFirestore} from "firebase/firestore";
-import {getAuth} from "firebase/auth";
 import router from "@/router";
 import AppHeader from "@/components/AppHeader.vue";
 import {UserServices} from "@/services/user-services";
-import {User} from "@/data/user";
-import Firestore = firestore.Firestore;
 
 const store = useStore()
 
@@ -73,36 +68,6 @@ const state = reactive({
     register: false
 });
 
-const myFirestore: Firestore = getFirestore(firebaseApp)
-const auth = getAuth(firebaseApp)
-
-
-watch(state.form, () => {
-    if (hasFormChanged()) {
-        const changedFormKeys = getChangedFormKeys()
-
-        for (const key of changedFormKeys) {
-            console.log('changedFormKeys', key)
-            switch (key) {
-                case 'username':
-                    checkUsernameAvailability()
-                    break
-                case 'email':
-                    checkEmailAvailability().then(() => {
-                            console.log('email changed', state.errors.email)
-                        }
-                    )
-                    break
-                case 'password':
-                    state.errors.password = ''
-                    break
-            }
-        }
-    }
-})
-
-// Log the store
-console.log('store', store)
 
 // If the user is already logged in, redirect to the home page
 if (store.state.user) {
@@ -119,87 +84,15 @@ function changeInputValue(input: string, value: string) {
     state.form[input] = value
 }
 
-/**
- * Function to check if the form input values has changed
- */
-function hasFormChanged() {
-    return getChangedFormKeys().length > 0
-}
-
-/**
- * Function to get the keys of the form that have been modified
- * @returns {string[]} An array of the keys that have been modified
- */
-function getChangedFormKeys() {
-    const modifiedFields: string[] = []
-    Object.keys(state.form).forEach(field => {
-        if (state.form[field].trim() !== defaultForm[field].trim()) {
-            modifiedFields.push(field)
-        }
-    })
-    return modifiedFields
-}
-
-
-/**
- * Function to check if the username is available
- */
-async function checkUsernameAvailability(): Promise<boolean> {
-    // Check from firebase if the username is available using getDocs(collection())
-    const docRef = collection(myFirestore, "users");
-    const querySnapshot = await getDocs(docRef);
-    for (const doc of querySnapshot.docs) {
-        if (doc.data().username === state.form.username) {
-            state.errors.username = 'Username is not available'
-            return false
-        }
-    }
-    state.errors.username = ''
-    return true
-}
-
-
-/**
- * Function to check if the email is available
- */
-async function checkEmailAvailability(): Promise<boolean> {
-    // Check from firebase if the email is available using getDocs(collection())
-    const docRef = collection(myFirestore, "users");
-    const querySnapshot = await getDocs(docRef);
-    for (const doc of querySnapshot.docs) {
-        if (doc.data().email === state.form.email) {
-            state.errors.email = 'Email is not available'
-            console.log('email changed', state.errors.email)
-            return false
-        }
-    }
-    console.log('email changed', state.errors.email)
-    state.errors.email = ''
-    return true
-}
-
 function loginOrRegister() {
-    /*if (store.state.user) {
-        const user = new User(store.state.user.uid, state.form.username, state.form.email, "")
-        UserServices.updateUserAsync(user).then(
-            () => {
-                router.push('/')
-            }
-        ).catch(
-            (error) => {
-                state.errors.global = error.message
-            }
-        )
-
-        return;
-    }*/
 
     //Entrée : l'utilisateur essai de se connecter
-    if(!state.register) {
+    if (!state.register) {
         UserServices.loginOrRegisterUserAsync(store, state.form.email, state.form.password).then(
             (user) => {
                 console.log('user', user)
                 state.register = false
+                router.push('/')
             }
         ).catch(
             (error) => {
@@ -224,7 +117,6 @@ function loginOrRegister() {
 
         return;
     }
-
 
 
     UserServices.createUserAsync(store, state.form.email, state.form.password, state.form.username).then(
