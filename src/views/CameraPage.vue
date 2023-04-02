@@ -30,6 +30,7 @@ import {
   toastController, useBackButton
 } from "@ionic/vue";
 import router from "@/router";
+import {getAnalytics, logEvent} from "firebase/analytics";
 
 export default {
     name: "CameraPage",
@@ -116,11 +117,13 @@ export default {
 
                 if (data.hasContent) {
                     if (data.content.startsWith("https://climbbudy.web.app/")) {
+                      logEvent(getAnalytics(),'valid_qr_code', {content_type: 'qr_code', item: data.content});
                         router.push(data.content.split("https://climbbudy.web.app")[1]);
                         BarcodeScanner.stopScan();
                         this.isScanning = false;
                         this.realShow();
                     } else {
+                        logEvent(getAnalytics(),'invalid_qr_code', {content_type: 'qr_code', item: data.content});
                         toastController.create({
                             message: "Not a valid QR Code",
                             duration: 1500,

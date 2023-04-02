@@ -44,72 +44,11 @@
                 </ion-col>
             </ion-row>
 
-            <ion-row>
-                <ion-col>
-                    <ion-item>
-                        <ion-label position="floating">Tips :</ion-label>
-                        <ion-input v-model="state.localDetails.tips"
-                                   :placeholder="details ? details.tips : ''"></ion-input>
-                    </ion-item>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col>
-                    <ion-list>
-                        <ion-item>
-                            <ion-select interface="popover" v-model="state.localDetails.difficulty"
-                                        placeholder="Difficulty">
-                                <IonSelectOption value="9B">9B</IonSelectOption>
-                                <IonSelectOption value="9A+">9A+</IonSelectOption>
-                                <IonSelectOption value="9A">9A</IonSelectOption>
-                                <IonSelectOption value="8C+">8C+</IonSelectOption>
-                                <IonSelectOption value="8C">8C</IonSelectOption>
-                                <IonSelectOption value="8B+">8B+</IonSelectOption>
-                                <IonSelectOption value="8B">8B</IonSelectOption>
-                                <IonSelectOption value="8A+">8A+</IonSelectOption>
-                                <IonSelectOption value="8A">8A</IonSelectOption>
-                                <IonSelectOption value="7C+">7C+</IonSelectOption>
-                                <IonSelectOption value="7C">7C</IonSelectOption>
-                                <IonSelectOption value="7B+">7B+</IonSelectOption>
-                                <IonSelectOption value="7B">7B</IonSelectOption>
-                                <IonSelectOption value="7A+">7A+</IonSelectOption>
-                                <IonSelectOption value="7A">7A</IonSelectOption>
-                                <IonSelectOption value="6C+">6C+</IonSelectOption>
-                                <IonSelectOption value="6C">6C</IonSelectOption>
-                                <IonSelectOption value="6B+">6B+</IonSelectOption>
-                                <IonSelectOption value="6B">6B</IonSelectOption>
-                                <IonSelectOption value="6A+">6A+</IonSelectOption>
-                                <IonSelectOption value="6A">6A</IonSelectOption>
-                                <IonSelectOption value="5C+">5C+</IonSelectOption>
-                                <IonSelectOption value="5C">5C</IonSelectOption>
-                                <IonSelectOption value="5B+">5B+</IonSelectOption>
-                                <IonSelectOption value="5B">5B</IonSelectOption>
-                                <IonSelectOption value="5A+">5A+</IonSelectOption>
-                                <IonSelectOption value="5A">5A</IonSelectOption>
-                                <IonSelectOption value="4C+">4C+</IonSelectOption>
-                                <IonSelectOption value="4C">4C</IonSelectOption>
-                            </ion-select>
-                        </ion-item>
-                    </ion-list>
-                </ion-col>
-                <ion-col>
-                    <ion-list>
-                        <ion-item>
-                            <ion-select v-model="state.localDetails.color" interface="popover" placeholder="Color">
-                                <IonSelectOption v-for="(name, code) in colors" :key="code" :value="code">
-                                    {{ name }}
-                                </IonSelectOption>
-                            </ion-select>
-                            <ion-button :color="state.localDetails.color"></ion-button>
-                        </ion-item>
-                    </ion-list>
-                </ion-col>
-            </ion-row>
             <!-- iterate over the state.localDetails.difficultyPerCategory with index and value            -->
             <ion-row v-for="(difficultyCategory, key) in state.localDetails.difficultyPerCategory" :key="key">
                 <ion-col>
-                    <ion-list>
                         <ion-item style="display: flex; align-items: center">
+                    <ion-list>
                             <ion-label style="flex-grow: 0.5">{{ difficultyCategory.name }}</ion-label>
                             <ion-range style="flex-grow: 1" :pin-formatter="pinFormatter"
                                         v-model="state.localDetails.difficultyPerCategory[key].difficulty"
@@ -117,9 +56,68 @@
                         </ion-item>
                     </ion-list>
                 </ion-col>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Tips :</ion-label>
+          <ion-input v-model="state.localDetails.tips" :placeholder="details ? details.tips : ''"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-select interface="popover" v-model="state.localDetails.difficulty" placeholder="Difficulty">
+              <IonSelectOption value="9B">9B</IonSelectOption>
+              <IonSelectOption value="9A+">9A+</IonSelectOption>
+              <IonSelectOption value="9A">9A</IonSelectOption>
+              <IonSelectOption value="8C+">8C+</IonSelectOption>
+              <IonSelectOption value="8C">8C</IonSelectOption>
+              <IonSelectOption value="8B+">8B+</IonSelectOption>
+              <IonSelectOption value="8B">8B</IonSelectOption>
+              <IonSelectOption value="8A+">8A+</IonSelectOption>
+              <IonSelectOption value="8A">8A</IonSelectOption>
+              <IonSelectOption value="7C+">7C+</IonSelectOption>
+              <IonSelectOption value="7C">7C</IonSelectOption>
+              <IonSelectOption value="7B+">7B+</IonSelectOption>
+              <IonSelectOption value="7B">7B</IonSelectOption>
+              <IonSelectOption value="7A+">7A+</IonSelectOption>
+              <IonSelectOption value="7A">7A</IonSelectOption>
+              <IonSelectOption value="6C+">6C+</IonSelectOption>
+              <IonSelectOption value="6C">6C</IonSelectOption>
+              <IonSelectOption value="6B+">6B+</IonSelectOption>
+              <IonSelectOption value="6B">6B</IonSelectOption>
+              <IonSelectOption value="6A+">6A+</IonSelectOption>
+              <IonSelectOption value="6A">6A</IonSelectOption>
+              <IonSelectOption value="5C+">5C+</IonSelectOption>
+              <IonSelectOption value="5C">5C</IonSelectOption>
+              <IonSelectOption value="5B+">5B+</IonSelectOption>
+              <IonSelectOption value="5B">5B</IonSelectOption>
+              <IonSelectOption value="5A+">5A+</IonSelectOption>
+              <IonSelectOption value="5A">5A</IonSelectOption>
+              <IonSelectOption value="4C+">4C+</IonSelectOption>
+              <IonSelectOption value="4C">4C</IonSelectOption>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-select v-model="state.localDetails.color" interface="popover" placeholder="Color">
+              <IonSelectOption v-for="(name, code) in colors" :key="code" :value="code">
+                {{ name }}
+              </IonSelectOption>
+            </ion-select>
+            <ion-button :color="state.localDetails.color"></ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <card-option-picker ref="localComp" :card="details ? details.card : ['Pied relief:true','main relief:false'] "></card-option-picker>
             </ion-row>
-        </ion-grid>
-        <card-option-picker ref="localComp" :card="details ? details.card : null "></card-option-picker>
 
         <ion-button color="success" expand="block" style="margin-bottom: 1vh; margin-top: 1vh" @click="save()">SAVE
             ROUTE
