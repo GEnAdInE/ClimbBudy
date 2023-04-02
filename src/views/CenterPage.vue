@@ -61,8 +61,6 @@
         </ion-fab>
 
     </ion-page>
-    <!-- Loading -->
-
 
 </template>
 
@@ -98,6 +96,8 @@ import {addCircleOutline, arrowBackCircleOutline, chevronDownCircle, createOutli
 import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import {RouteServices} from "@/services/route-services";
 import AppHeader from "@/components/AppHeader.vue";
+import {getAnalytics, logEvent} from "firebase/analytics";
+
 
 const props = defineProps({
     centerId: {
@@ -111,9 +111,7 @@ const isNewRouteModalOpen = reactive({
 })
 
 function showAddModal() {
-    console.log(isNewRouteModalOpen)
     isNewRouteModalOpen.value = !isNewRouteModalOpen.value;
-    console.log(isNewRouteModalOpen)
 
 }
 
@@ -122,8 +120,8 @@ async function handleAdd(e: any) {
     if (centerRef.value == undefined) return;
     e.center = centerRef.value;
     e.id = null;
+    logEvent(getAnalytics(),'adding_route', {content_type: 'route', item: e});
 
-    console.log("ADDING ROUTE : ", e);
     const res = await RouteServices.addRoute(e);
 
     if (res && routesRef.value) {
@@ -133,28 +131,29 @@ async function handleAdd(e: any) {
 }
 
 function goTo(centerId: string, routeId: string) {
-    router.push('/centers/' + centerId + '/routes/' + routeId);
+  logEvent(getAnalytics(),'navigate_to_route', {content_type: 'route', item: routeId});
+  router.push('/centers/' + centerId + '/routes/' + routeId);
+
 }
 
 function log(data: any) {
+
     console.log(data);
 }
 
 const goBack = () => {
-    router.push('/home');
+  logEvent(getAnalytics(),'navigate_back_home', {content_type: 'route', item: centerRef});
+  router.push('/home');
 }
 const centerRef = ref<Center>();
 const routesRef = ref<Route[]>();
 
 onMounted(async () => {
-    console.log("CENTER ID : ", props.centerId)
     if (!props.centerId) return;
-
     const center: Center = await CenterServices.getCenterAsync(props.centerId, true);
     centerRef.value = center;
     routesRef.value = center.routes;
-    console.log("CENTER : ", centerRef)
-    console.log("ROUTES : ", centerRef.value.routes);
+
 });
 </script>
 

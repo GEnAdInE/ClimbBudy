@@ -51,7 +51,7 @@ import {
     IonToolbar,
 } from '@ionic/vue';
 
-
+import {getAnalytics, logEvent} from "firebase/analytics";
 import {onMounted, ref} from 'vue';
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";
@@ -168,6 +168,10 @@ function campage() {
 }
 
 function magic(centerId: string) {
+    logEvent(getAnalytics(), 'navigate_to_center', {
+        content_type: 'centerid',
+        item: centerId
+    });
     router.push('/centers/' + centerId)
 }
 

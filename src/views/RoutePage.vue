@@ -31,7 +31,7 @@
             <CommentListItem v-for="comment in routeRef.comments" :key="comment.id" :comment="comment"/>
 
             <ion-button id="click-trigger" color="secondary" expand="block" shape="round" strong="strong"
-                        style="margin-top: 2vh" @click="showCommentPopover($event)">Add a comment
+                        style="margin-top: 2vh" @click="showCommentPopover($event)" :disabled="true">Add a comment
             </ion-button>
             <ion-popover alignment="center" side="top" ref="sendCommentPopover" :is-open="state.isPopoverOpen" @didDismiss="state.isPopoverOpen = false" :event="state.event">
                 <ion-content > <!-- TODO: transform in component -->
@@ -158,6 +158,7 @@ import {pickImages} from "@/services/fstorage-service";
 
 import {Center} from "@/data/center";
 import AppHeader from "@/components/AppHeader.vue";
+import {getAnalytics, logEvent} from "firebase/analytics";
 
 const sendCommentPopover = ref();
 
@@ -223,7 +224,7 @@ async function sendComment() {
     // Disable the button
     sendBtn.setAttribute("disabled", "true");
 
-    // Retrieve the comment data from the state
+    // Retrieve the comment data from the form
     const commentText = (document.getElementById("commentText") as HTMLInputElement).value;
 
     if (routeRef.value === undefined) {
@@ -251,12 +252,15 @@ function handleSave(route: any) {
     showModal();
     console.log(route satisfies Route);
     // update route where params of route not equals to ''
+    logEvent(getAnalytics(),'updated_route', {content_type: 'route', item: route});
 
 }
 
 function deleted() {
     console.log("deleted");
     //delete route
+    logEvent(getAnalytics(),'deleted_route', {content_type: 'route', item: routeRef});
+
 }
 
 async function pickMyImages() {

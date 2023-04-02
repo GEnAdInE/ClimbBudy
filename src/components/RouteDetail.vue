@@ -1,5 +1,6 @@
 <template>
-    <ion-card :color=" route ? route.color : 'primary'">
+
+  <ion-card :color=" route ? route.color : 'primary'">
         <ion-card-header>
             <ion-card-title>{{ route ? route.name : 'Loading' }} {{ route ? route.icon : 'Loading' }}🔎
                 <ion-chip color="light" style="float: right;bottom: 1vh">{{
@@ -44,28 +45,28 @@
                 </ion-grid>
             </ion-card-content>
         </ion-card-header>
-
-    </ion-card>
+  </ion-card>
 </template>
 
 <script setup lang="ts">
 import {
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonChip,
-    IonCol,
-    IonGrid,
-    IonIcon,
-    IonLabel,
-    IonProgressBar,
-    IonRow
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonChip,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonLabel,
+  IonProgressBar,
+  IonRow
+
 } from "@ionic/vue";
 import {checkmark, locationOutline} from "ionicons/icons";
-import {onMounted, reactive} from "vue";
 import {Route} from "@/data/route";
+import {onMounted, reactive} from "vue";
 
 const props = defineProps({
     route: {
@@ -75,34 +76,42 @@ const props = defineProps({
 })
 
 const state = reactive({
-    cardata: new Map<string, boolean>(),
-    difficultyPerCategory: Route.defaultDifficultyPerCategory,
+  cardata: new Map<string, boolean>(),
+  difficultyPerCategory: Route.defaultDifficultyPerCategory,
 })
 
 onMounted(() => {
-    state.cardata = new Map<string, boolean>();
+  state.cardata = new Map<string, boolean>();
 
-    if (!props.route?.difficultyPerCategory) {
-        state.difficultyPerCategory = Route.defaultDifficultyPerCategory;
+  if (!props.route?.difficultyPerCategory) {
+    state.difficultyPerCategory = Route.defaultDifficultyPerCategory;
+  } else {
+    state.difficultyPerCategory = props.route.difficultyPerCategory;
+  }
+
+  console.log("DA PROPS", props.route)
+  if (props.route.card == undefined) {
+    return;
+  }
+  props.route.card?.forEach((item: any) => {
+    const spliter = item.split(':');
+    if (spliter[1] == "true") {
+      state.cardata.set(spliter[0], true);
     } else {
-        state.difficultyPerCategory = props.route.difficultyPerCategory;
-    }
+      state.cardata.set(spliter[0], false);
 
-    console.log("DA PROPS", props.route)
-    if (props.route.card == undefined) {
-        return;
     }
     props.route.card?.forEach((item: any) => {
-        const spliter = item.split(':');
-        if (spliter[1] == "true") {
-            state.cardata.set(spliter[0], true);
-        } else {
-            state.cardata.set(spliter[0], false);
-        }
+      const spliter = item.split(':');
+      if (spliter[1] == "true") {
+        state.cardata.set(spliter[0], true);
+      } else {
+        state.cardata.set(spliter[0], false);
+      }
     });
     console.log(state.cardata);
 
-
+  });
 });
 
 </script>

@@ -5,7 +5,6 @@ import {DifficultyPerCategory} from "@/data/difficulty-per-category";
 
 export class Route extends AbstractData {
 
-    keysToIgnore: string[] = ['id', 'center', 'comments'];
 
     constructor(
         public id: string,
@@ -26,6 +25,8 @@ export class Route extends AbstractData {
         public card: string[] = [],
     ) {
         super();
+        this.keysToIgnore.push('id', 'center', 'comments');
+
     }
 
     static defaultDifficultyPerCategory: DifficultyPerCategory[] = [
