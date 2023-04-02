@@ -100,10 +100,10 @@
                 <ion-grid>
                     <ion-row :key="item" v-for="[val,item] in cardConverted()" >
                         <ion-col size="8">
-                            <ion-label color="superdark">{{item}}</ion-label>
+                            <ion-label color="superdark">{{val}}</ion-label>
                         </ion-col>
                         <ion-col size="3">
-                            <ion-label color="superdark">{{convertTrueFalse(val)}}</ion-label>
+                            <ion-label color="superdark">{{convertTrueFalse(item)}}</ion-label>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
