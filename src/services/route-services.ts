@@ -116,7 +116,7 @@ export class RouteServices {
             const route: Route = routeDoc.data() satisfies Route;
             route.id = routeDoc.id;
             route.center = center;
-            // Make routeDoc.data().difficultyPerCategory a DifficultyPerCategory[]
+
             if(routeDoc.data().difficultyPerCategory) {
                 route.difficultyPerCategory = JSON.parse(routeDoc.data().difficultyPerCategory);
             }
