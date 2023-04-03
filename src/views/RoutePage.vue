@@ -7,7 +7,7 @@
                 <ion-fab-button color="tertiary" :disabled="false">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-list side="bottom">
+                <ion-fab-list side="bottom" v-if="isUserAllowedToEdit()">
                     <ion-fab-button color="light" @click="createImage()">
                         <ion-icon :icon="shareOutline"></ion-icon>
                     </ion-fab-button>
@@ -31,7 +31,7 @@
             <CommentListItem v-for="comment in routeRef.comments" :key="comment.id" :comment="comment"/>
 
             <ion-button id="click-trigger" color="secondary" expand="block" shape="round" strong="strong"
-                        style="margin-top: 2vh" @click="showCommentPopover($event)" :disabled="true">Add a comment
+                        style="margin-top: 2vh" @click="showCommentPopover($event)" :disabled="!isUserLoggedIn()">Add a comment
             </ion-button>
             <ion-popover alignment="center" side="top" ref="sendCommentPopover" :is-open="state.isPopoverOpen" @didDismiss="state.isPopoverOpen = false" :event="state.event">
                 <ion-content > <!-- TODO: transform in component -->
@@ -159,6 +159,7 @@ import {pickImages} from "@/services/fstorage-service";
 import {Center} from "@/data/center";
 import AppHeader from "@/components/AppHeader.vue";
 import {getAnalytics, logEvent} from "firebase/analytics";
+import {useStore} from "vuex";
 
 const sendCommentPopover = ref();
 
@@ -171,6 +172,7 @@ const state = reactive({
       theblob: null,
     }
 );
+
 const props = defineProps({
     centerId: {
         type: String,
@@ -181,6 +183,16 @@ const props = defineProps({
         required: true
     }
 })
+
+const store = useStore();
+
+function isUserLoggedIn() {
+    return store.state.user != null;
+}
+
+function isUserAllowedToEdit() {
+    return isUserLoggedIn() && store.state.user.role == 'ouvreur' || store.state.user.role == 'admin';
+}
 
 function cardConverted(){
   const mapp = new Map<string,boolean>();

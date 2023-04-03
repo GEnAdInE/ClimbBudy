@@ -1,5 +1,5 @@
-// Create services to handle user related operations from Google Firebase
-// It should be able to handle user login, user logout, user registration, user profile update, etc.
+// Create services to handle userCredential related operations from Google Firebase
+// It should be able to handle userCredential login, userCredential logout, userCredential registration, userCredential profile update, etc.
 // It should be made for Vue framework
 
 // Import firebase from @firebase
@@ -22,8 +22,8 @@ export class UserServices {
 
 
     /**
-     * Gets a user from the database
-     * @param id The id of the user
+     * Gets a userCredential from the database
+     * @param id The id of the userCredential
      */
     public static async getUserAsync(id: string): Promise<User> {
         const userDoc = await getDoc(doc(this.collection, id));
@@ -36,49 +36,67 @@ export class UserServices {
 
 
     /**
-     * Logs in a user
-     * @param store The store to commit the user to
-     * @param email The email of the user
-     * @param password The password of the user
+     * Logs in a userCredential
+     * @param store The store to commit the userCredential to
+     * @param email The email of the userCredential
+     * @param password The password of the userCredential
      */
-    public static async loginOrRegisterUserAsync(store: Store<any>, email: string, password: string): Promise<User> {
+    public static async loginUserAsync(store: Store<any>, email: string, password: string): Promise<User> {
 
         const userCredential = await signInWithEmailAndPassword(getAuth(firebaseApp), email, password)
         const user = userCredential.user;
 
-        store.commit('setUser', userCredential.user)
-        return new User(userCredential.user.uid, "", email, "")
+        // Get the data info from the firestore
+        const userDoc = await getDoc(doc(this.collection, user.uid));
+        console.log("The user get from firestore is: ", userDoc.data(), user.uid)
+        let userObj: User;
+
+        if(userDoc.exists()) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            userObj = userDoc.data() satisfies User;
+            userObj.id = userDoc.id
+            userObj.email = user.email || email
+        } else {
+            userObj = new User(user.uid, "", email)
+            await this.updateUserAsync(userObj)
+        }
+
+        store.commit('setUserCredential', userCredential.user)
+        store.commit('setUser', userObj)
+        return userObj
     }
 
 
     /**
-     * Creates a new user in the database
-     * @param store The store to commit the user to
-     * @param email The email of the user
-     * @param password The password of the user
-     * @param username The username of the user
+     * Creates a new userCredential in the database
+     * @param store The store to commit the userCredential to
+     * @param email The email of the userCredential
+     * @param password The password of the userCredential
+     * @param username The username of the userCredential
      */
     public static async createUserAsync(store: Store<any>, email: string, password: string, username: string|null = null): Promise<User> {
         const userCredential = await createUserWithEmailAndPassword(getAuth(firebaseApp), email, password)
         const user = userCredential.user;
         useStore()
-        store.commit('setUser', user)
 
-        const userObj = new User(user.uid, username || "", email, "")
+        const userObj = new User(user.uid, username || "", email)
 
         if(username != null) {
             // Save the username in the database
             await this.updateUserAsync(userObj)
         }
 
-        return userObj
+        store.commit('setUserCredential', user)
+        store.commit('setUser', userObj)
 
+        return userObj
     }
 
 
     /**
-     * Updates a user in the database
-     * @param user The user to update
+     * Updates a userCredential in the database
+     * @param user The userCredential to update
      */
     public static async updateUserAsync(user: User): Promise<void> {
         await updateDoc(doc(this.collection, user.id), {
@@ -86,13 +104,10 @@ export class UserServices {
             center_id: user.center_id
         }).catch((error) => {
             console.error(error)
-            // If the error is that the user does not exist, create the user
+            // If the error is that the userCredential does not exist, create the userCredential
             if(error.code == "not-found") {
                 const userDoc = doc(this.collection, user.id)
-                setDoc(userDoc, {
-                    username: user.username,
-                    center_id: user.center_id
-                })
+                setDoc(userDoc, user.getCleanDataObject())
             }
         })
     }

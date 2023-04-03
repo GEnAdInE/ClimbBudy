@@ -3,11 +3,12 @@
         <ion-loading message="Loading..." duration="5000" :is-open="!centerRef" ></ion-loading>
         <AppHeader v-if="centerRef" :second-part="centerRef.name"/>
         <ion-content id="main-content" v-if="centerRef" :scroll-events="false">
-            <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
+
+            <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top" v-if="isUserAllowedToEdit()">
                 <ion-fab-button :disabled="false" color="tertiary">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-list side="bottom">
+                <ion-fab-list side="bottom" >
                     <ion-fab-button color="light" @click="showAddModal">
                         <ion-icon :icon="addCircleOutline"></ion-icon>
                     </ion-fab-button>
@@ -16,6 +17,7 @@
                     </ion-fab-button>
                 </ion-fab-list>
             </ion-fab>
+
             <ion-card color="tertiary">
                 <ion-card-header v-if="centerRef" @click="log(centerRef.routes)">
                     <ion-card-title v-if="centerRef.name">{{ centerRef.name ?? "" }}</ion-card-title>
@@ -37,7 +39,7 @@
                            @click="goTo(centerRef.id, route.id)"/>
 
             </ion-list>
-            <ion-modal :is-open="isNewRouteModalOpen.value">
+            <ion-modal :is-open="isNewRouteModalOpen.value && isUserAllowedToEdit()">
                 <ion-header>
                     <ion-toolbar>
                         <ion-title>Add Route</ion-title>
@@ -96,6 +98,17 @@ import EditRouteDetails from "@/components/EditRouteDetails.vue";
 import {RouteServices} from "@/services/route-services";
 import AppHeader from "@/components/AppHeader.vue";
 import {getAnalytics, logEvent} from "firebase/analytics";
+import {useStore} from "vuex";
+
+const store = useStore();
+
+function isUserLoggedIn() {
+    return store.state.user != null;
+}
+
+function isUserAllowedToEdit() {
+    return isUserLoggedIn() && store.state.user.role == 'ouvreur' || store.state.user.role == 'admin';
+}
 
 
 const props = defineProps({

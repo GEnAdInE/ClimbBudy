@@ -23,7 +23,12 @@ export abstract class AbstractData {
         // Iterate over the keys of the object
         for (const key in this) {
             // If the key is not in the keysToIgnore
-            if (this[key] !== null && this[key] !== undefined && this[key] !== '' && !this.keysToIgnore.includes(key)) {
+            if (this[key] !== null
+                && this[key] !== undefined
+                && this[key] !== ''
+                && !this.keysToIgnore.includes(key)
+                && key !== 'keysToIgnore'
+            ) {
                 // Add it to the copy
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore

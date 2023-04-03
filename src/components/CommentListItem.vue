@@ -1,7 +1,7 @@
 <template>
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ props.comment.user?.name }}</ion-card-title>
+      <ion-card-title>{{ props.comment.userCredential?.name }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       {{ props.comment?.subject }}

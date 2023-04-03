@@ -22,12 +22,12 @@ import router from "@/router";
 
 const store = useStore();
 
-if(!store.state.user) {
+if(!store.state.userCredential) {
     router.push({name: "Home"});
 }
 
 
-store.commit('setUser', null);
+store.commit('setUserCredential', null);
 setTimeout(() => {
     router.push({name: "Home"});
 }, 5000);

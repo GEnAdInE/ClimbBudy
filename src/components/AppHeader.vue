@@ -16,14 +16,14 @@
                 Home
             </ion-button>
 
-            <!-- Add a button to go to the login page, if the user is not logged in -->
-            <ion-button v-if="!state.user" expand="block" fill="clear" @click="goTo('login')">
+            <!-- Add a button to go to the login page, if the userCredential is not logged in -->
+            <ion-button v-if="!state.userCredential" expand="block" fill="clear" @click="goTo('login')">
                 <ion-icon slot="start" :icon="logIn"></ion-icon>
                 Login
             </ion-button>
 
-            <!-- Add a button to logout, if the user is logged in -->
-            <ion-button v-if="state.user" expand="block" fill="clear" @click="goTo('logout')">
+            <!-- Add a button to logout, if the userCredential is logged in -->
+            <ion-button v-if="state.userCredential" expand="block" fill="clear" @click="goTo('logout')">
                 <ion-icon slot="start" :icon="logOut"></ion-icon>
                 Logout
             </ion-button>
@@ -72,7 +72,7 @@ const store = useStore()
 const state = reactive({
     secondPart: props.secondPart,
     contentId: props.contentId,
-    user: store.state.user
+    userCredential: store.state.userCredential
 })
 
 if(state.secondPart){

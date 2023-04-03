@@ -146,10 +146,10 @@ export class CommentServices {
      * @param comment Message object
      */
     public static async updateComments(comment: Comment): Promise<void> {
-        // Get user document
+        // Get userCredential document
         const messageDoc = doc(this.firestore, sprintf(this.collectionPath, comment.route?.center?.id, comment.route?.id), comment.id);
 
-        // Update user document
+        // Update userCredential document
         return await updateDoc(messageDoc, comment.getCleanDataObject());
     }
 
@@ -178,7 +178,7 @@ export class CommentServices {
 
         const collectionRef = collection(this.firestore, sprintf(this.collectionPath, comment.route?.center?.id, comment.route?.id));
 
-        // Get user document
+        // Get userCredential document
         const newCommentRef = doc(collectionRef);
 
         const copy = comment.getCleanDataObject();

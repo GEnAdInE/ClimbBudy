@@ -69,8 +69,8 @@ const state = reactive({
 });
 
 
-// If the user is already logged in, redirect to the home page
-if (store.state.user) {
+// If the userCredential is already logged in, redirect to the home page
+if (store.state.userCredential) {
     router.push('/')
 }
 
@@ -88,15 +88,14 @@ function loginOrRegister() {
 
     //Entrée : l'utilisateur essai de se connecter
     if (!state.register) {
-        UserServices.loginOrRegisterUserAsync(store, state.form.email, state.form.password).then(
-            (user) => {
-                console.log('user', user)
+        UserServices.loginUserAsync(store, state.form.email, state.form.password).then(
+            (userCredential) => {
                 state.register = false
                 router.push('/')
             }
         ).catch(
             (error) => {
-                if (error.code === 'auth/user-not-found') {
+                if (error.code === 'auth/userCredential-not-found') {
                     state.register = true
                     return;
                 }
@@ -111,6 +110,7 @@ function loginOrRegister() {
                     return;
                 }
 
+                console.error(error)
                 state.errors.global = error.message
             }
         )
@@ -120,7 +120,7 @@ function loginOrRegister() {
 
 
     UserServices.createUserAsync(store, state.form.email, state.form.password, state.form.username).then(
-        (user) => {
+        (userCredential) => {
             router.push('/')
         }
     ).catch(
@@ -139,6 +139,7 @@ function loginOrRegister() {
             }
 
             state.errors.global = errorMessage
+            console.error(error)
             return;
         }
     )

@@ -208,7 +208,7 @@ export class RouteServices {
      * @param updateChildren True if the children should be updated, false otherwise (default is false)
      */
     public static async updateRoute(route: Route, updateChildren = false): Promise<void> {
-        // Get user document
+        // Get userCredential document
         const routeDoc = doc(this.firestore, sprintf(this.collectionPath, route.center?.id), route.id);
 
         if (updateChildren) {
@@ -217,7 +217,7 @@ export class RouteServices {
             }
         }
 
-        // Update user document
+        // Update userCredential document
         return await updateDoc(routeDoc, route.getCleanDataObject());
     }
 
@@ -240,7 +240,7 @@ export class RouteServices {
 
         const collectionRef = collection(this.firestore, sprintf(this.collectionPath, route.center.id));
 
-        // Get user document
+        // Get userCredential document
         const newRouteRef = doc(collectionRef);
 
         return await setDoc(newRouteRef, route.getCleanDataObject()).then(

@@ -27,6 +27,7 @@ import {firebaseApp} from './firebase';
 import {createStore} from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import {UserCredential} from "@firebase/auth";
+import {User} from "@/data/user";
 
 
 const app = createApp(App)
@@ -44,12 +45,17 @@ const store = createStore(
         state() {
             return {
                 // User object of type UserCredential from firebase being null by default
-                user: null as UserCredential | null
+                userCredential: null as UserCredential | null,
+                user: null as User | null
             }
         },
         mutations: {
-            // Mutation to set user
-            setUser(state: { user: UserCredential | null; }, user: UserCredential | null) {
+            // Mutation to set userCredential
+            setUserCredential(state, userCredential: UserCredential | null) {
+                console.log("Setting userCredential to: ", userCredential);
+                state.userCredential = userCredential;
+            },
+            setUser(state, user: User | null) {
                 console.log("Setting user to: ", user);
                 state.user = user;
             }
