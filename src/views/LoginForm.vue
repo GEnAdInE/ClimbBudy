@@ -95,7 +95,7 @@ function loginOrRegister() {
             }
         ).catch(
             (error) => {
-                if (error.code === 'auth/userCredential-not-found') {
+                if (error.code === 'auth/user-not-found') {
                     state.register = true
                     return;
                 }
