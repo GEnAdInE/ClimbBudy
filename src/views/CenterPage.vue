@@ -107,7 +107,7 @@ function isUserLoggedIn() {
 }
 
 function isUserAllowedToEdit() {
-    return isUserLoggedIn() && store.state.user.role == 'ouvreur' || store.state.user.role == 'admin';
+    return isUserLoggedIn() && store.state.user?.role == 'ouvreur' || store.state.user?.role == 'admin';
 }
 
 
@@ -132,8 +132,8 @@ async function handleAdd(e: any) {
     if (centerRef.value == undefined) return;
     e.center = centerRef.value;
     e.id = null;
-    logEvent(getAnalytics(),'adding_route', {content_type: 'route', item: e});
-
+    //logEvent(getAnalytics(),'adding_route', {content_type: 'route', item: e});
+    console.log(e)
     const res = await RouteServices.addRoute(e);
 
     if (res && routesRef.value) {

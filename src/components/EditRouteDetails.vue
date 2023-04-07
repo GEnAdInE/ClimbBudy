@@ -147,6 +147,7 @@ import colorlist from "@//theme/colorlist";
 import CardOptionPicker from "@/components/CardOptionPicker.vue";
 import {onMounted, reactive, ref} from "vue";
 import {RouteServices} from "@/services/route-services";
+import {Center} from "@/data/center";
 
 const state = reactive({
   localDetails: {
@@ -166,6 +167,10 @@ const state = reactive({
 const props = defineProps({
   details: {
     type: Object as () => Route,
+    required: false
+  },
+  mycenter: {
+    type: Object as () => Center,
     required: false
   }
 });
@@ -188,13 +193,11 @@ function save() {
       state.localDetails.card.push(tmp);
     }
 
-    if(!props.details){
-      return;
-    }
 
-    const convertedroute = new Route(props.details.id, state.localDetails.name, state.localDetails.description, state.localDetails.difficulty, props.details.center, state.localDetails.tips, state.localDetails.icon, state.localDetails.author, state.localDetails.location, state.localDetails.color, [], state.localDetails.difficultyPerCategory, state.localDetails.card);
-    console.log(convertedroute)
-    RouteServices.updateRoute(convertedroute)
+
+    const convertedroute = new Route("", state.localDetails.name, state.localDetails.description, state.localDetails.difficulty, props.mycenter, state.localDetails.tips, state.localDetails.icon, state.localDetails.author, state.localDetails.location, state.localDetails.color, [], state.localDetails.difficultyPerCategory, state.localDetails.card);
+    //console.log(convertedroute)
+    //RouteServices.updateRoute(convertedroute)
     emit("saved", convertedroute);
   }
 }

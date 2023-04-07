@@ -49,6 +49,17 @@ export default {
 
     },
     methods: {
+      async checkPermission()  {
+        // check or request permission
+        const status = await BarcodeScanner.checkPermission({ force: true });
+
+        if (status.granted) {
+          // the user granted permission
+          return true;
+        }
+
+        return false;
+      },
         goBack() {
             if (!isPlatform('desktop') && !isPlatform('mobileweb')) {
                 BarcodeScanner.stopScan();
@@ -72,7 +83,7 @@ export default {
         },
         realHide() {
 
-            BarcodeScanner.showBackground();
+            BarcodeScanner.hideBackground();
             document.querySelector('body').classList.add('scanner-active');
             if (isPlatform('ios')) {
                 this.backColor = document.querySelector('.ios body').style.getPropertyValue('--ion-background-color');
@@ -92,49 +103,49 @@ export default {
             arrowBackCircleOutline
         }
     },
-    ionViewDidEnter() {
-        if (isPlatform('desktop') || isPlatform('mobileweb')) {
-            toastController.create({
-                message: "Don't work on web !!",
+    async ionViewDidEnter() {
+      if (isPlatform('desktop') || isPlatform('mobileweb')) {
+        toastController.create({
+          message: "Don't work on web !!",
+          duration: 1500,
+          position: 'middle',
+          color: 'warning',
+        }).then((toast) => {
+          toast.present();
+        });
+      } else {
+        BarcodeScanner.prepare();
+        this.isScanning = true;
+        this.realHide();
+        await this.checkPermission();
+        BarcodeScanner.startScan({targetedFormats: [SupportedFormat.QR_CODE]}).then((data) => {
+          console.log(data);
+          this.qr = data.content;
+
+
+          if (data.hasContent) {
+            if (data.content.startsWith("https://climbbudy.web.app/")) {
+              logEvent(getAnalytics(), 'valid_qr_code', {content_type: 'qr_code', item: data.content});
+              router.push(data.content.split("https://climbbudy.web.app")[1]);
+              BarcodeScanner.stopScan();
+              this.isScanning = false;
+              this.realShow();
+            } else {
+              logEvent(getAnalytics(), 'invalid_qr_code', {content_type: 'qr_code', item: data.content});
+              toastController.create({
+                message: "Not a valid QR Code",
                 duration: 1500,
                 position: 'middle',
-                color: 'warning',
-            }).then((toast) => {
+                color: 'pink',
+
+              }).then((toast) => {
                 toast.present();
-            });
-        } else {
-            BarcodeScanner.prepare();
-            this.isScanning = true;
-            this.realHide();
+              });
+            }
+          }
 
-            BarcodeScanner.startScan({targetedFormats: [SupportedFormat.QR_CODE]}).then((data) => {
-                console.log(data);
-                this.qr = data.content;
-
-
-                if (data.hasContent) {
-                    if (data.content.startsWith("https://climbbudy.web.app/")) {
-                      logEvent(getAnalytics(),'valid_qr_code', {content_type: 'qr_code', item: data.content});
-                        router.push(data.content.split("https://climbbudy.web.app")[1]);
-                        BarcodeScanner.stopScan();
-                        this.isScanning = false;
-                        this.realShow();
-                    } else {
-                        logEvent(getAnalytics(),'invalid_qr_code', {content_type: 'qr_code', item: data.content});
-                        toastController.create({
-                            message: "Not a valid QR Code",
-                            duration: 1500,
-                            position: 'middle',
-                            color: 'pink',
-
-                        }).then((toast) => {
-                            toast.present();
-                        });
-                    }
-                }
-
-            });
-        }
+        });
+      }
 
 
     },

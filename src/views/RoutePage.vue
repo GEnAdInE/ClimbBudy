@@ -191,7 +191,7 @@ function isUserLoggedIn() {
 }
 
 function isUserAllowedToEdit() {
-    return isUserLoggedIn() && store.state.user.role == 'ouvreur' || store.state.user.role == 'admin';
+    return isUserLoggedIn() && store.state.user?.role == 'ouvreur' || store.state.user?.role == 'admin';
 }
 
 function cardConverted(){
