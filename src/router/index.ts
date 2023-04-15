@@ -20,12 +20,12 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'Login or Register',
-        component: () => LoginForm
+        component: LoginForm
     },
     {
         path: '/logout',
         name: 'Logout',
-        component: () => LogoutPage
+        component: LogoutPage
     },
     {
         path: '/camera',

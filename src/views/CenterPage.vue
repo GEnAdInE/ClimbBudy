@@ -1,11 +1,11 @@
 <template>
     <ion-page>
-        <ion-loading message="Loading..." duration="5000" :is-open="!centerRef" ></ion-loading>
+        <ion-loading message="Loading..." :is-open="!centerRef" ></ion-loading>
         <AppHeader v-if="centerRef" :second-part="centerRef.name"/>
         <ion-content id="main-content" v-if="centerRef" :scroll-events="false">
 
-            <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top" v-if="isUserAllowedToEdit()">
-                <ion-fab-button :disabled="false" color="tertiary">
+            <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
+                <ion-fab-button color="tertiary" :disabled="!isUserAllowedToEdit()">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="bottom" >
@@ -86,6 +86,7 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
+    IonLoading
 } from "@ionic/vue";
 import router from "@/router";
 import {CenterServices} from "@/services/center-services";

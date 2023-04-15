@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import {IonPage, IonContent,IonCard,IonCardContent,IonCardHeader,IonCardTitle} from "@ionic/vue";
 import AppHeader from "@/components/AppHeader.vue";
 import {useStore} from "vuex";
 import router from "@/router";

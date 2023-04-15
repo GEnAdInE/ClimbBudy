@@ -2,6 +2,7 @@
     <!--Create a login/register state-->
     <ion-page>
         <AppHeader/>
+        <ion-content>
         <ion-card id="main-content">
             <ion-card-header>
                 <ion-card-title>Login or register</ion-card-title>
@@ -37,10 +38,12 @@
 
             </ion-card-content>
         </ion-card>
+        </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts" setup>
+import {IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton,IonPage,IonContent} from '@ionic/vue';
 import {reactive} from 'vue'
 import {useStore} from 'vuex'
 import firestore from "@firebase/firestore";

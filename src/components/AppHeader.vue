@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import {IonHeader, IonTitle, IonToolbar} from '@ionic/vue';
+import {IonHeader, IonTitle, IonToolbar,IonIcon,IonMenuButton,IonMenuToggle,IonButton,IonContent,IonMenu,IonButtons} from '@ionic/vue';
 import {reactive} from "vue";
 import {useStore} from "vuex";
 import {home, logIn, logOut, close} from "ionicons/icons";
@@ -56,16 +56,17 @@ import router from "@/router";
 // <Header :secondPart="routeRef.center.name"></Header>
 // and the title will be "Climb buddy | routeRef.center.name"
 // Make it default to null so that it doesn't have to be passed in the call
-const props = defineProps<{
+const props = defineProps({
     secondPart: {
-        type: string,
-        default: null
+        type: String,
+        default: null,
+        required: false
     },
     contentId: {
-        type: string,
+        type: String,
         default: "main-content"
     }
-}>()
+});
 
 const store = useStore()
 

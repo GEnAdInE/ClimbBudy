@@ -4,10 +4,10 @@
         <ion-content id="main-content" class="ion-padding" :scroll-events="false">
 
             <ion-fab slot="fixed" :edge="true" horizontal="end" vertical="top">
-                <ion-fab-button color="tertiary" :disabled="false">
+                <ion-fab-button color="tertiary" :disabled="!isUserAllowedToEdit()">
                     <ion-icon :icon="chevronDownCircle"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-list side="bottom" v-if="isUserAllowedToEdit()">
+                <ion-fab-list side="bottom">
                     <ion-fab-button color="light" @click="createImage()">
                         <ion-icon :icon="shareOutline"></ion-icon>
                     </ion-fab-button>
